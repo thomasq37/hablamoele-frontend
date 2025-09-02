@@ -1,0 +1,26 @@
+#reservations {
+  .container{
+    h2{
+      font-size: 3.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    p{
+      text-align: center;
+    }
+    .contenu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-top: 2rem;
+      gap: 2rem;
+      app-reservation-form {
+        height: 100%;
+      }
+    }
+  }
+
+}
+

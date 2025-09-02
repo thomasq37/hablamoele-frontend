@@ -1,0 +1,68 @@
+header{
+  background-color: #ffdb67;
+  padding-top: 2rem;
+  position: relative;
+
+  .menu{
+    .menu-icones{
+      display: flex;
+      justify-content: space-between;
+      button{
+        background: none;
+        border: none;
+        font-size: 3rem;
+        cursor: pointer;
+      }
+      img{
+        width: 10rem;
+      }
+    }
+    ul{
+      position: absolute;
+      left: 0;
+      right: 0;
+      background-color: #ffdb67;
+      padding: 1rem 0 0;
+      li{
+        a{
+          width: 100%;
+          display: block;
+          padding: 1.5rem;
+          cursor: pointer;
+          &:hover,
+          &:focus{
+            background-color: black;
+            color: white;
+          }
+
+        }
+      }
+    }
+  }
+}
+@media only screen and (min-width: 992px){
+  header{
+    .menu{
+      display: flex;
+      justify-content: space-between;
+      .menu-icones{
+        button{
+          display: none;
+        }
+        img{
+        }
+      }
+      ul{
+        position: initial;
+        display: flex;
+        li{
+          a{
+            &:hover,
+            &:focus{
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+@import "variables";
+
+.btn,
+.mis-en-avant:hover{
+  padding: 1rem 1.5rem;
+  color: $couleurPrincipale;
+  border: 2px solid $couleurPrincipale;
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+  display: block;
+  width: max-content;
+  font-size: 1.3rem;
+  text-align: center;
+}
+.full-size{
+  width: 100% !important;
+}
+.is-uppercase{
+  text-transform: uppercase;
+}
+.btn:disabled {
+  pointer-events: none;
+  opacity: .7;
+}
+
+.btn:hover,
+.mis-en-avant{
+
+  color: #fff;
+  background-color: $couleurPrincipale;
+  box-shadow: rgba(172, 172, 172, 0.25) 0 8px 15px;
+}
+
+.btn:active {
+  box-shadow: none;
+}

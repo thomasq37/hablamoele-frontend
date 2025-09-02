@@ -1,0 +1,68 @@
+@import "variables";
+
+
+.inscription {
+  .container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    .inscription-container{
+      h1{
+        text-align: center;
+        color: $couleurPrincipale;
+        margin: 3rem 0;
+      }
+
+      width: 100%;
+      max-width: 45rem;
+      form{
+        .inscription-rappel-longueur-mdp{
+          padding: 0 0 3rem;
+          color: $couleurPrincipale;
+          text-decoration: underline;
+        }
+        .inscription-erreur-msg{
+          padding-bottom: 3rem;
+          text-align: center;
+          font-style: italic;
+          color: red;
+        }
+        .authentification-actions-list{
+          display: flex;
+          gap: 1.5rem;
+          justify-content: right;
+          flex-wrap: wrap;
+
+
+          .authentification-actions-item{
+
+          }
+        }
+        div {
+          margin-bottom: 20px;
+
+          label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: lighter;
+
+            span {
+              color: red;
+            }
+          }
+
+          input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+            &:focus {
+              outline: 2px solid #143b86; // Couleur de mise au point bleue
+            }
+          }
+        }
+      }
+    }
+  }
+}

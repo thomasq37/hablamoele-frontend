@@ -1,0 +1,53 @@
+#about{
+  .container{
+    .description{
+      display: flex;
+      flex-direction: column;
+      h2{
+        font-size: 3.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      div{
+        padding: 2rem;
+        p{
+          text-align: justify !important;
+          margin-bottom: 2rem !important;
+        }
+      }
+
+    }
+    @media only screen and (min-width: 992px){
+      .description{
+        flex-direction: row;
+        h2{
+          margin-top: 0;
+          min-width: 30rem;
+        }
+      }
+    }
+    .metriques{
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      li{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        span{
+          font-size: 3.5rem;
+          font-weight: bold;
+        }
+      }
+    }
+    @media only screen and (min-width: 992px){
+      .metriques{
+        flex-direction: row;
+        justify-content: space-around;
+      }
+    }
+  }
+
+}
+

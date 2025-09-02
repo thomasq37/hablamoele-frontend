@@ -1,0 +1,55 @@
+<!-- src/app/components/reservations/reservation-form/reservation-form.component.html -->
+<form class="reservaform" [formGroup]="form" (ngSubmit)="submit()">
+  <label>Tu nombre</label>
+  <input formControlName="name" type="text" placeholder="Introduce tu nombre" />
+
+  <label>Tu correo</label>
+  <input formControlName="mail" type="email" placeholder="Introduce tu correo" />
+
+  <label>Tipo de curso</label>
+  <select formControlName="courseType">
+    <option value="niveles">Cursos de Español por Niveles</option>
+    <option value="tematicos">Cursos de Español Temáticos</option>
+    <option value="catalan">Cursos de Catalán por Niveles</option>
+    <option value="dele">Preparación DELE</option>
+  </select>
+
+  <div *ngIf="courseType === 'niveles' || courseType === 'dele'">
+    <label>Nivel</label>
+    <select formControlName="level">
+      <option value="a1">A1</option><option value="a2">A2</option>
+      <option value="b1">B1</option><option value="b2">B2</option>
+      <option value="c1">C1</option>
+    </select>
+  </div>
+
+  <div *ngIf="courseType === 'catalan'">
+    <label>Nivel de Catalán</label>
+    <select formControlName="levelCatalan">
+      <option value="a1">A1</option><option value="a2">A2</option>
+      <option value="b1">B1</option><option value="b2">B2</option>
+    </select>
+  </div>
+
+  <div *ngIf="courseType === 'tematicos'">
+    <label>Temática</label>
+    <select formControlName="topic">
+      <option value="viajes">Viajes</option>
+      <option value="conversation">Conversación</option>
+      <option value="compras">Compras</option>
+      <option value="salud">Salud</option>
+      <option value="otra">Otra</option>
+    </select>
+  </div>
+
+  <label>Descripción de tus objetivos</label>
+  <textarea formControlName="goals" placeholder="Describe tus objetivos"></textarea>
+
+  <div class="checkbox-primera-hora">
+    <label for="primeraHora">Quiero aprovechar la primera hora gratuita</label>
+    <input type="checkbox" id="primeraHora" formControlName="freeTrial">
+  </div>
+
+  <!-- Bouton : libellé dynamique + disabled si pas de créneau ou form invalide -->
+  <button type="submit" [disabled]="!canSubmit">{{ submitLabel }}</button>
+</form>

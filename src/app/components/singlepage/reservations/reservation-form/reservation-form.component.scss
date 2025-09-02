@@ -1,0 +1,52 @@
+form{
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  label{
+    font-weight: lighter;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+  }
+  textarea{
+    height: 99px;
+  }
+  select,
+  input:not([type="checkbox"]),
+  textarea{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #d9d9d9;
+    padding: 10px;
+    color: black;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    &::placeholder{
+      font-size: 1.3rem;
+    }
+  }
+  .checkbox-primera-hora{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    input{
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: 0;
+    }
+    label{
+      margin-bottom: 0;
+    }
+  }
+  button{
+    background-color: rgb(24, 23, 21);
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid black;
+  }
+}

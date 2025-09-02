@@ -1,0 +1,45 @@
+.fc .fc-toolbar-title {
+  font-size: 1rem !important;
+}
+.fc-toolbar-chunk {
+  display: flex !important;
+}
+.fc-timegrid.fc-view{
+  background-color: white;
+}
+a.fc-v-event{
+  background-color: black !important;
+  border: 1px solid black !important;
+}
+.fc-day-today{
+  background-color: white !important;
+}
+a.fc-v-event.gcal-event{
+  pointer-events: none;
+}
+.fc-next-button.fc-button.fc-button-primary,
+.fc-prev-button.fc-button.fc-button-primary{
+  background-color: black !important;
+  border-color: black !important;
+}
+.fc-col-header-cell-cushion {
+  padding: 1rem 0 !important;
+}
+.fc .fc-timegrid-axis-cushion, .fc .fc-timegrid-slot-label-cushion {
+  padding: .7rem 4px !important;
+}
+.fc-theme-standard td, .fc-theme-standard th {
+  border: 1px solid #d9d9d9 !important;
+}
+.fc-theme-standard .fc-scrollgrid{
+  border: none !important;
+}
+.fc-bg-event.fc-event.fc-event-start.fc-event-end.fc-event-future.unavailable-slot{
+  background:  black !important;
+}
+.fc-theme-standard th {
+  border-bottom: none !important;
+}
+.fc .fc-timegrid-slot {
+  height: 2.5em !important;
+}

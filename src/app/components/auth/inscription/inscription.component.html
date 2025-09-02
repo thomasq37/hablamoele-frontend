@@ -1,0 +1,47 @@
+<section class="inscription">
+  <div class="container">
+    <div class="inscription-container">
+<!--
+      <app-action-link text="Connexion" destination="/connexion"></app-action-link>
+-->
+
+      <h1>
+        Inscription
+      </h1>
+      <form [formGroup]="inscriptionForm" (ngSubmit)="inscription()">
+        <div>
+          <div>
+            <label for="email">Email: <span aria-hidden="true">*</span></label>
+            <input type="email" id="email" formControlName="email" required>
+          </div>
+          <div *ngIf="inscriptionForm.get('email')?.errors?.['email']">
+            L'email doit être valide.
+          </div>
+        </div>
+        <div>
+          <div>
+            <label for="mdp">Mot de passe: <span aria-hidden="true">*</span></label>
+            <input type="password" id="mdp" formControlName="mdp" required>
+          </div>
+          <div>
+            <label for="confirmMdp">Confirmer votre mot de passe: <span aria-hidden="true">*</span></label>
+            <input type="password" id="confirmMdp" formControlName="confirmMdp" required>
+          </div>
+        </div>
+        <p class="inscription-rappel-longueur-mdp">Le mot de passe contient au moins 10 caractères.</p>
+        <p class="inscription-erreur-msg" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+        <ul class="authentification-actions-list">
+          <li class="authentification-actions-item">
+            <app-action-btn [disabled]="!inscriptionForm.valid" [estMisEnAvant]="true" type="submit" text="Inscription"></app-action-btn>
+
+          </li>
+          <li class="authentification-actions-item">
+            <app-action-link text="Connexion" destination="/connexion"></app-action-link>
+
+          </li>
+        </ul>
+      </form>
+    </div>
+
+  </div>
+</section>

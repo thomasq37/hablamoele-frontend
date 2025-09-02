@@ -1,0 +1,42 @@
+<section class="connexion">
+  <div class="container">
+    <div class="connexion-container">
+
+      <h1>
+        Connexion
+      </h1>
+      <form [formGroup]="connexionForm" (ngSubmit)="connexion()">
+        <div>
+          <div>
+            <label for="email">Email: <span aria-hidden="true">*</span></label>
+            <input type="email" id="email" formControlName="email" required>
+          </div>
+          <div *ngIf="connexionForm.get('email')?.errors?.['email']">
+            L'email doit être valide.
+          </div>
+        </div>
+        <div>
+          <div>
+            <label for="mdp">Mot de passe: <span aria-hidden="true">*</span></label>
+            <input type="password" id="mdp" formControlName="mdp" required>
+          </div>
+        </div>
+        <!--<a class="recuperation-mot-de-passe-lien" href="/recuperation-mot-de-passe">Demander un nouveau mot de passe ?</a>
+        <a class="recuperation-mot-de-passe-lien" href="/inscription">Créer un compte ?</a>-->
+
+        <p class="connexion-erreur-msg" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+        <ul class="authentification-actions-list">
+          <li class="authentification-actions-item">
+            <app-action-btn [disabled]="!connexionForm.valid" [estMisEnAvant]="true" type="submit" text="Connexion"></app-action-btn>
+
+          </li>
+          <li class="authentification-actions-item">
+            <app-action-link text="Inscription" destination="/inscription"></app-action-link>
+
+          </li>
+        </ul>
+      </form>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,23 @@
+<header>
+  <div class="container">
+    <nav class="menu" >
+      <div class="menu-icones">
+        <img src="assets/img/logo.png" alt="Logo du site">
+        <button
+          class="menu-toggle"
+          (click)="toggleMenu()"
+        >
+          ☰
+        </button>
+      </div>
+      <ul *ngIf="grandEcran || menuEstOuvert">
+        <li><a (click)="emitItemSelected('hero')">Inicio</a></li>
+        <li><a (click)="emitItemSelected('about')">Sobre mí</a></li>
+        <li><a (click)="emitItemSelected('services')">Services</a></li>
+        <li><a (click)="emitItemSelected('reservations')">Reservas</a></li>
+        <li><a (click)="emitItemSelected('recursos')">Recursos para profesores</a></li>
+        <li><a (click)="emitItemSelected('contact')">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

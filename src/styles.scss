@@ -1,0 +1,184 @@
+
+// global
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/font/Poppins-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/assets/font/Poppins-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+*{
+  margin: auto 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', serif;
+
+}
+html{
+  font-size: 62.5%;
+}
+h2{
+  font-weight: 400;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  font-size: 1.5rem;
+  min-height: 100vh;
+  background-color: #FCFCFC;
+}
+.container {
+  padding: 0 2rem;
+  max-width: 120rem;
+  margin: auto;
+}
+
+ul{
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+p{
+  margin: 0 !important;
+}
+
+
+.fc .fc-toolbar-title {
+  font-size: 1.4rem !important;
+}
+.fc-toolbar-chunk {
+  display: flex !important;
+}
+.fc-timegrid.fc-view{
+  background-color: white;
+}
+a.fc-v-event{
+  background-color: black !important;
+  border: 1px solid black !important;
+}
+.fc-day-today{
+  background-color: white !important;
+}
+a.fc-v-event.gcal-event{
+  pointer-events: none;
+}
+.fc-next-button.fc-button.fc-button-primary,
+.fc-prev-button.fc-button.fc-button-primary{
+  background-color: black !important;
+  border-color: black !important;
+}
+.fc-col-header-cell-cushion {
+  padding: 1rem 0 !important;
+  font-weight: lighter !important;
+  font-size: 1.1rem !important;
+}
+.fc .fc-timegrid-axis-cushion, .fc .fc-timegrid-slot-label-cushion {
+  padding: .7rem 4px !important;
+}
+.fc-theme-standard td, .fc-theme-standard th {
+  border: 1px solid #d9d9d9 !important;
+}
+.fc-theme-standard .fc-scrollgrid{
+  border: none !important;
+}
+.fc-bg-event.fc-event.fc-event-start.fc-event-end.fc-event-future.unavailable-slot{
+  background:  black !important;
+}
+.fc-theme-standard th {
+  border-bottom: none !important;
+}
+.fc .fc-timegrid-slot {
+  height: 2.5em !important;
+}
+
+
+@media only screen and (min-device-width: 1366px) and (max-device-width: 1366px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {}
+
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {}
+
+@media only screen and (device-width: 375px) and (device-height: 812px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {}
+
+@media only screen and (device-width: 812px) and (device-height: 375px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {}
+
+@media (min-width: 1366px) {}
+
+@media screen and (max-width: 2560px) {
+  body.openmenu .overlay {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1440px) {}
+
+@media screen and (max-width: 1366px) {}
+
+@media screen and (max-width: 1280px) {}
+
+@media screen and (max-width: 1128px) {}
+
+@media screen and (max-width: 1024px) {}
+
+@media (max-width: 999px) {
+  body.openmenu .overlay {
+    display: block;
+  }
+  .heroimg {
+    height: 300px;
+    width: 300px;
+  }
+  .heroimg .heroimg__poto {
+    height: 300px;
+    width: 300px;
+  }
+  .infohero__p {
+    font-size: 15px;
+  }
+  .infohero__title {
+    font-size: 50px;
+  }
+  .aboutlink {
+    margin: 0 auto;
+  }
+  #typed-text {
+    font-size: 15px;
+  }
+  .porfoliowarp__item {
+    width: 50%;
+  }
+}
+
+@media (max-width: 899px) {}
+
+@media (max-width: 799px) {
+  .porfoliowarp__item {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 699px) {}
+
+@media only screen and (max-width: 580px) {}
+
+@media (max-width: 480px) {}
+
+@media (max-width: 360px) {}
+
+@media all and (-ms-high-contrast: none),
+(-ms-high-contrast: active) {}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {}
+
+@media(hover: hover) and (pointer: fine) {}
+
+@media screen and (prefers-reduced-motion) {}
