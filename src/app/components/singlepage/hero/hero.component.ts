@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit, Inject, PLATFORM_ID, NgZone, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-hero',
@@ -14,6 +15,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   typed = '';
   private textIndex = 0;
   private charIndex = 0;
+  private clickPourNaviguerAdmin = 0;
   cursorBlink = true;
 
   // Compatible Node + Browser
@@ -22,7 +24,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private zone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   ngAfterViewInit(): void {
@@ -88,6 +91,13 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       this.cursorBlink = true;
       this.textIndex = (this.textIndex + 1) % this.texts.length;
       this.schedule(() => this.typeNext(), 1000);
+    }
+  }
+
+  naviguerAAdmin() {
+    this.clickPourNaviguerAdmin++
+    if(this.clickPourNaviguerAdmin >= 5) {
+      this.router.navigate(['/admin-dashboard']);
     }
   }
 }

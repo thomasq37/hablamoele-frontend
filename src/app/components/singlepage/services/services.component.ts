@@ -61,8 +61,16 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (!this.isBrowser) return;
 
-    // Attendre que le DOM soit complètement rendu
+    // ✅ Attendre l'hydratation complète
     setTimeout(() => {
+      if (this.sliderRef?.nativeElement && !this.slider) {
+        this.initSlider();
+      }
+    }, 0);
+  }
+
+  private initSlider(): void {
+    try {
       this.slider = new KeenSlider(this.sliderRef.nativeElement, {
         loop: true,
         mode: 'free-snap',
@@ -77,16 +85,9 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
         },
         created: (slider) => {
           this.dots = [...Array(slider.track.details.slides.length).keys()];
-
-          // 🔹 SOLUTION PRINCIPALE : Multiple updates pour s'assurer du bon rendu
-          requestAnimationFrame(() => {
-            slider.update();
-            requestAnimationFrame(() => {
-              slider.update();
-            });
-          });
-
-          this.startAutoplay();
+          // ✅ Forcer une mise à jour après création
+          setTimeout(() => slider.update(), 0);
+          setTimeout(() => this.startAutoplay(), 100);
         },
         slideChanged: (slider) => {
           this.currentSlide = slider.track.details.rel;
@@ -95,16 +96,17 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
         dragEnded: () => this.startAutoplay()
       });
 
-      // 🔹 Forces additionnelles après initialisation
-      setTimeout(() => this.slider?.update(), 0);
-      setTimeout(() => this.slider?.update(), 100);
-
+      // ✅ Événements souris
       this.sliderRef.nativeElement.addEventListener('mouseover', () => this.stopAutoplay());
       this.sliderRef.nativeElement.addEventListener('mouseout', () => this.startAutoplay());
-    }, 0);
+
+    } catch (error) {
+      console.error('Erreur slider:', error);
+    }
   }
 
   startAutoplay() {
+    if (!this.isBrowser || !this.slider) return;
     this.stopAutoplay();
     this.intervalId = setInterval(() => {
       this.slider?.next();
@@ -112,11 +114,17 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
   }
 
   stopAutoplay() {
-    clearInterval(this.intervalId);
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 
   ngOnDestroy(): void {
-    this.slider?.destroy();
     this.stopAutoplay();
+    if (this.slider) {
+      this.slider.destroy();
+      this.slider = null;
+    }
   }
 }

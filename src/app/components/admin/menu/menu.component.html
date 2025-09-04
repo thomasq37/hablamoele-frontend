@@ -1,0 +1,21 @@
+<header>
+  <div class="container">
+    <nav class="menu" >
+      <div class="menu-icones">
+        <img src="/assets/img/logo.png" alt="Logo du site">
+        <button
+          class="menu-toggle"
+          (click)="toggleMenu()"
+        >
+          ☰
+        </button>
+      </div>
+      <ul *ngIf="grandEcran || menuEstOuvert">
+        <li *ngFor="let item of menuItems">
+          <a href="{{item.url}}">{{ item.nom }}</a>
+        </li>
+        <li><a (click)="deconnexion()">Desconnectar</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -5,6 +5,7 @@ import {ActionBtnComponent} from "../action-btn/action-btn.component";
 import {ActionLinkComponent} from "../action-link/action-link.component";
 import {AuthService} from "../../services/auth/auth.service";
 import {LoginRequest} from "../../models/login-request.model";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -21,7 +22,7 @@ export class ConnexionComponent {
   });
   errorMessage = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   connexion(): void {
     if (this.connexionForm.valid) {
@@ -30,6 +31,7 @@ export class ConnexionComponent {
         .then(response => {
           console.log('Connexion réussie', response);
           localStorage.setItem('auth_token', response);
+          this.router.navigate(['/admin-dashboard']);
           this.errorMessage = '';
         })
         .catch(error => {

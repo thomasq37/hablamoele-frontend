@@ -77,8 +77,6 @@ export class ReservationFormComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes['selectedSlots']);
-
     if (changes['selectedSlots']) {
       const ctrl = this.form.get('freeTrial')!;
       // Si les conditions sont réunies → activer la checkbox

@@ -1,0 +1,136 @@
+<!-- Menu dynamique -->
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="modifier-recursos">
+  <div class="container">
+    <div class="modifier-recursos-container">
+
+      <h1>Modificar recurso</h1>
+
+      <!-- Loading state -->
+      <div *ngIf="loading" class="loading-container">
+        <p>Cargando recurso...</p>
+      </div>
+
+      <!-- Form -->
+      <form *ngIf="!loading" [formGroup]="recursosForm" (ngSubmit)="modifierRecursos()">
+
+        <!-- Título -->
+        <div class="form-field">
+          <label for="titulo">Título *:</label>
+          <input type="text" id="titulo" formControlName="titulo" required />
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-field">
+          <label for="descripcion">Descripción *:</label>
+          <textarea id="descripcion" formControlName="description" rows="5" required></textarea>
+        </div>
+
+        <!-- Etiquetas -->
+        <div class="form-field">
+          <label for="tags">Etiquetas (separadas por comas) *:</label>
+          <input type="text" id="tags" formControlName="tags" placeholder="ejemplo: educación, recursos, PDF" required />
+        </div>
+
+        <!-- Banner actual -->
+        <div class="form-field">
+          <label>Banner actual:</label>
+          <div class="current-banner" *ngIf="currentBannerUrl">
+            <img [src]="currentBannerUrl" alt="Banner actual" class="banner-preview" />
+            <p class="banner-info">Banner PNG actual</p>
+          </div>
+          <div *ngIf="!currentBannerUrl" class="no-banner">
+            <p>No hay banner actual</p>
+          </div>
+        </div>
+
+        <!-- Nuevo Banner PNG -->
+        <div class="form-field">
+          <label for="banner">Cambiar banner (PNG):</label>
+          <input
+            #bannerInput
+            type="file"
+            id="banner"
+            accept="image/png"
+            (change)="onBannerChange($event)"
+          />
+          <small class="file-help">Deja vacío si no quieres cambiar el banner</small>
+
+          <div class="file-info" *ngIf="newBannerFileName">
+            <span class="file-name">Nuevo: {{ newBannerFileName }}</span>
+            <button type="button" class="btn-remove" (click)="supprimerNouveauBanner()">×</button>
+          </div>
+        </div>
+
+        <!-- Infografías actuales y nuevas -->
+        <div class="form-field">
+          <label>Gestionar infografías (PDF):</label>
+
+          <!-- Lista unificada de infografías -->
+          <div class="infografias-manager" *ngIf="infografiasVisibles.length > 0">
+            <h4>Infografías del recurso:</h4>
+            <ul class="file-list">
+              <li *ngFor="let infografia of infografiasVisibles; let i = index" class="file-item" [class.is-new]="infografia.isNew">
+                <span class="file-name">
+                  {{ infografia.name }}
+                  <span *ngIf="infografia.isNew" class="new-badge">NUEVO</span>
+                </span>
+                <button type="button" class="btn-remove-individual" (click)="supprimerInfografia(infografias.indexOf(infografia))" [title]="'Eliminar ' + infografia.name">×</button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Infografías eliminadas (con posibilidad de restaurar) -->
+          <div class="deleted-infografias" *ngIf="infografiasSupprimees.length > 0">
+            <h4>Infografías eliminadas:</h4>
+            <ul class="file-list deleted">
+              <li *ngFor="let infografia of infografiasSupprimees; let i = index" class="file-item deleted">
+                <span class="file-name">{{ infografia.name }}</span>
+                <button type="button" class="btn-restore" (click)="restaurerInfografia(infografias.indexOf(infografia))" title="Restaurar">↺</button>
+              </li>
+            </ul>
+            <small class="deletion-note">Las infografías eliminadas se quitarán definitivamente al guardar.</small>
+          </div>
+
+          <!-- Input para agregar nuevas infografías -->
+          <div class="add-infografias">
+            <label for="infografias">Agregar más infografías:</label>
+            <input
+              #infografiasInput
+              type="file"
+              id="infografias"
+              accept="application/pdf"
+              multiple
+              (change)="onInfografiasChange($event)"
+            />
+            <small class="file-help">Selecciona uno o más archivos PDF para agregar</small>
+          </div>
+
+          <div *ngIf="infografiasVisibles.length === 0" class="no-infografias">
+            <p>No hay infografías. Agrega algunas usando el selector de archivos arriba.</p>
+          </div>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div class="form-erreur-msg" *ngIf="errorMessage !== ''">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Actions formulaire -->
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="retournerALaListe()">
+            Cancelar
+          </button>
+          <app-action-btn
+            [disabled]="!recursosForm.valid"
+            [estMisEnAvant]="true"
+            type="submit"
+            text="Actualizar recurso"
+          ></app-action-btn>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>

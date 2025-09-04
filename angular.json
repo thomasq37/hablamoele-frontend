@@ -17,20 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "baseHref": "/",
             "outputPath": "dist/hablamosele-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "allowedCommonJsDependencies": [
-              "dotenv",
-              "body-parser",
-              "googleapis",
-              "nodemailer",
-              "debug",
-              "agent-base",
-              "node-domexception",
-              "qs",
-              "web-streams-polyfill"
-            ],
             "polyfills": [
               "zone.js"
             ],
@@ -43,14 +33,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-              "src/javascript/vendor/keen-slider.js",
-              "src/javascript/vendor/glightbox.js",
-              "src/javascript/vendor/shufle.js",
-              "src/javascript/main.js",
-              "src/javascript/contact.js",
-              "src/javascript/reservation.js"
-            ],
+            "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -67,13 +50,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "8kb",
+                  "maximumError": "8kb"
                 }
               ],
               "outputHashing": "all"

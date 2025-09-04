@@ -1,27 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   canActivate(): boolean {
+    // ✅ Côté serveur, toujours autoriser l'accès
+    if (!isPlatformBrowser(this.platformId)) {
+      return true;
+    }
+
     if (this.isLoggedIn()) {
       return true;
     } else {
       // Suppression du token si expiré ou invalide
-      localStorage.removeItem('auth_token');
+      this.removeToken();
       // Redirection vers l'accueil
-      this.router.navigate(['/accueil']);
+      this.router.navigate(['/connexion']);
       return false;
     }
   }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('auth_token');
+    // ✅ Vérification côté client uniquement
+    if (!isPlatformBrowser(this.platformId)) {
+      return false;
+    }
+
+    const token = this.getToken();
     if (token) {
       const parts = token.split('.');
       if (parts.length === 3) {
@@ -44,5 +58,28 @@ export class AuthGuard implements CanActivate {
     }
 
     return false; // Pas de token ou pas au format JWT
+  }
+
+  // ✅ Méthodes utilitaires pour gérer localStorage de façon sécurisée
+  private getToken(): string | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+    return localStorage.getItem('auth_token');
+  }
+
+  private removeToken(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    localStorage.removeItem('auth_token');
+  }
+
+  // ✅ Méthode publique pour définir le token (utile pour le service d'auth)
+  setToken(token: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    localStorage.setItem('auth_token', token);
   }
 }

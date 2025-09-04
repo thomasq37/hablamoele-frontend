@@ -1,9 +1,5 @@
-// server.ts
-/******************************************************************
- *  Angular SSR + Express + Stripe + Google Calendar + Gmail OAuth
- *  => Reproduit le comportement de TON ancien fichier, à l’identique
- ******************************************************************/
-import 'dotenv/config'; // charge .env AVANT tout
+// server.ts - Version corrigée basée sur votre ancien serveur qui fonctionne
+import 'dotenv/config';
 
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
@@ -12,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
-// ====== Dépendances backend (identiques à ton ancien fichier) ======
+// ====== Dépendances backend ======
 import bodyParser from 'body-parser';
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
@@ -24,14 +20,14 @@ const stripe = new Stripe(process.env['STRIPE_SECRET_KEY'] as string, {
   apiVersion: '2025-08-27.basil',
 });
 
-// ====== Google OAuth (Calendar + Gmail) ======
+// ====== Google OAuth ======
 const oauth2ClientCalendar = new google.auth.OAuth2(
   process.env['GOOGLE_CLIENT_ID'],
   process.env['GOOGLE_CLIENT_SECRET'],
   'https://developers.google.com/oauthplayground'
 );
 oauth2ClientCalendar.setCredentials({
-  refresh_token: process.env['GOOGLE_REFRESH_TOKEN'], // Refresh token pour Google Calendar
+  refresh_token: process.env['GOOGLE_REFRESH_TOKEN'],
 });
 
 const oauth2ClientGmail = new google.auth.OAuth2(
@@ -40,14 +36,13 @@ const oauth2ClientGmail = new google.auth.OAuth2(
   'https://developers.google.com/oauthplayground'
 );
 oauth2ClientGmail.setCredentials({
-  refresh_token: process.env['GOOGLE_REFRESH_TOKEN_SMTP'], // Refresh token pour Gmail
+  refresh_token: process.env['GOOGLE_REFRESH_TOKEN_SMTP'],
 });
 
 async function createTransporter() {
   const accessToken = await oauth2ClientGmail.getAccessToken();
-
   const options: SMTPTransport.Options = {
-    service: 'gmail',             // accepté par SMTPTransport.Options
+    service: 'gmail',
     auth: {
       type: 'OAuth2',
       user: process.env['GOOGLE_SMTP_USER'],
@@ -57,25 +52,23 @@ async function createTransporter() {
       accessToken: accessToken?.token || undefined,
     },
   };
-
   return nodemailer.createTransport(options);
 }
 
 const calendar = google.calendar({ version: 'v3', auth: oauth2ClientCalendar });
 
-// ================================================================
-//                      APP / ANGULAR SSR
-// ================================================================
 export function app(): express.Express {
   const server = express();
-
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
   const commonEngine = new CommonEngine();
 
-  // ======= Redirection HTTPS (identique à ton ancien middleware) =======
+  server.set('view engine', 'html');
+  server.set('views', browserDistFolder);
+
+  // ======= Redirection HTTPS =======
   server.use((req: Request, res: Response, next: NextFunction) => {
     if (req.header('x-forwarded-proto') !== 'https' && process.env['NODE_ENV'] === 'production') {
       res.redirect(`https://${req.header('host')}${req.url}`);
@@ -84,10 +77,10 @@ export function app(): express.Express {
     }
   });
 
-  // ======= Static "public" comme dans l'ancien code (si tu as un dossier public/) =======
+  // ======= Static public =======
   server.use(express.static('public'));
 
-  // ======= Stripe Webhook (body RAW) : doit être AVANT express.json() =======
+  // ======= Stripe Webhook (AVANT express.json()) =======
   server.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req: Request, res: Response) => {
     const sig = req.headers['stripe-signature'] as string;
     let event: Stripe.Event;
@@ -101,80 +94,62 @@ export function app(): express.Express {
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
-
       const formDataRaw = session.metadata?.['formData'];
       const eventsMetadataRaw = session.metadata?.['eventsMetadata'];
       const formData = formDataRaw ? JSON.parse(formDataRaw) : {};
       const eventsMetadata: Array<{ start_time: string; end_time: string }> =
         eventsMetadataRaw ? JSON.parse(eventsMetadataRaw) : [];
 
-      // Créer chaque Meet et stocker les liens
       const eventsWithLinks: Array<{ start_time: string; end_time: string; googleMeetLink: string }> = [];
       for (const eventMetadata of eventsMetadata) {
         const googleMeetLink = await createGoogleCalendarEvent(formData, eventMetadata);
         eventsWithLinks.push({ ...eventMetadata, googleMeetLink });
       }
 
-      // Envoi d'un email unique avec tous les détails
       await sendConfirmationEmail(formData, eventsMetadata, false, eventsWithLinks);
     }
 
     return res.status(200).json({ received: true });
   });
 
-  // ======= JSON pour toutes les autres routes =======
-  server.use(express.json({ limit: '1mb', type: '*/*' }));
+  // ======= JSON pour les autres routes =======
+  server.use(express.json({ limit: '1mb' }));
 
-  // ======= Endpoints publics (identiques) =======
+  // ======= API Endpoints =======
   server.get('/stripe-key', (req: Request, res: Response) => {
     res.json({ publishableKey: process.env['STRIPE_PUBLISHABLE_KEY'] });
   });
 
   server.post('/create-free-session', async (req: Request, res: Response) => {
-    const { formData, eventsMetadata } = req.body as {
-      formData: any;
-      eventsMetadata: Array<{ start_time: string; end_time: string }>;
-    };
-
+    const { formData, eventsMetadata } = req.body;
     try {
       const eventsWithLinks: Array<{ start_time: string; end_time: string; googleMeetLink: string }> = [];
       for (const eventMetadata of eventsMetadata) {
         const googleMeetLink = await createGoogleCalendarEvent(formData, eventMetadata);
         eventsWithLinks.push({ ...eventMetadata, googleMeetLink });
       }
-
       await sendConfirmationEmail(formData, eventsMetadata, true, eventsWithLinks);
       res.json({ success: true });
     } catch (error: any) {
-      console.error('Erreur lors de la création de la session gratuite:', error);
+      console.error('Erreur session gratuite:', error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
 
   server.get('/check-payment-status', async (req: Request, res: Response) => {
     const { session_id } = req.query as { session_id?: string };
-
     try {
       if (!session_id) return res.status(400).json({ success: false, error: 'session_id manquant' });
       const session = await stripe.checkout.sessions.retrieve(session_id);
-      if (session.payment_status === 'paid') {
-        return res.json({ success: true });
-      } else {
-        return res.json({ success: false });
-      }
+      return res.json({ success: session.payment_status === 'paid' });
     } catch (error) {
-      console.error('Erreur lors de la vérification du statut du paiement:', error);
+      console.error('Erreur vérification paiement:', error);
       return res.status(500).json({ success: false, error: 'Erreur de vérification du paiement' });
     }
   });
 
   server.post('/create-checkout-session', async (req: Request, res: Response) => {
-    const { items, formData, eventsMetadata } = req.body as {
-      items: Stripe.Checkout.SessionCreateParams.LineItem[];
-      formData: any;
-      eventsMetadata: Array<{ start_time: string; end_time: string }>;
-    };
-
+    const { items, formData, eventsMetadata } = req.body;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: items,
@@ -186,34 +161,31 @@ export function app(): express.Express {
         eventsMetadata: JSON.stringify(eventsMetadata || []),
       },
     });
-
     res.json({ id: session.id });
   });
 
   server.get('/google-api-key', (req: Request, res: Response) => {
-    res.json(
-      { apiKey: process.env['GOOGLE_CALENDAR_APIKEY'],
-        calendarId: process.env['GOOGLE_CALENDAR_ID'],});
+    res.json({
+      apiKey: process.env['GOOGLE_CALENDAR_APIKEY'],
+      calendarId: process.env['GOOGLE_CALENDAR_ID'],
+    });
   });
 
   server.get('/unit-amount', (req: Request, res: Response) => {
     res.json({ unitAmount: process.env['UNIT_AMOUNT'] });
   });
 
-  // ======= Formulaire contact (identique) =======
   server.post('/submit-contact', async (req: Request, res: Response) => {
-    const { name, email, comment } = req.body as { name?: string; email?: string; comment?: string };
-
+    const { name, email, comment } = req.body;
     if (!name || !email || !comment) {
       return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
     }
 
     try {
       const transporter = await createTransporter();
-
       const mailOptions = {
         from: process.env['GOOGLE_SMTP_USER'],
-        to: process.env['GOOGLE_SMTP_USER'], // où tu reçois les messages
+        to: process.env['GOOGLE_SMTP_USER'],
         subject: 'Nuevo mensaje de contacto',
         html: `
           <h2>Nuevo mensaje de contacto</h2>
@@ -223,26 +195,27 @@ export function app(): express.Express {
           <p>${comment}</p>
         `,
       };
-
       await transporter.sendMail(mailOptions);
       return res.json({ success: true, message: 'Message envoyé avec succès!' });
     } catch (error) {
-      console.error("Erreur lors de l'envoi du message de contact:", error);
-      return res.status(500).json({ success: false, message: "Une erreur est survenue lors de l'envoi du message." });
+      console.error("Erreur envoi contact:", error);
+      return res.status(500).json({ success: false, message: "Erreur lors de l'envoi du message." });
     }
   });
 
-  // ======= Fichiers statiques Angular (dist/browser) =======
+  // ✅ IMPORTANT: Comme dans votre ancien serveur qui fonctionne
+  // Servir les fichiers statiques AVANT les routes Angular
   server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
 
-  // ======= SSR Angular =======
-  server.set('view engine', 'html');
-  server.set('views', browserDistFolder);
+  // Sitemap spécifique si nécessaire
+  server.get('/sitemap.xml', (req, res) => {
+    res.sendFile(join(browserDistFolder, 'sitemap.xml'));
+  });
 
-  server.get('*', (req: Request, res: Response, next: NextFunction) => {
+  // ✅ Routes Angular SSR (en dernier, comme dans votre ancien serveur)
+  server.get('*', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
 
-    const commonEngine = new CommonEngine();
     commonEngine
       .render({
         bootstrap,
@@ -259,22 +232,20 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const PORT = 4000;
+  const PORT = process.env['PORT'] || 4000;
   const server = app();
   server.listen(PORT, () => {
     console.log(`Node Express server listening on http://localhost:${PORT}`);
   });
 }
+
 run();
 
-
-/* ===================== Helpers identiques ===================== */
-
+// ============= Helper Functions =============
 async function createGoogleCalendarEvent(
   formData: any,
   eventMetadata: { start_time: string; end_time: string }
 ): Promise<string> {
-  // Conserve TA logique d'ajustement horaire (-2h)
   function adjustTime(isoString: string) {
     const date = new Date(isoString);
     date.setHours(date.getHours() - 2);
@@ -283,11 +254,6 @@ async function createGoogleCalendarEvent(
 
   const adjustedStartTime = adjustTime(eventMetadata.start_time);
   const adjustedEndTime = adjustTime(eventMetadata.end_time);
-
-  console.log('Original start time:', eventMetadata.start_time);
-  console.log('Adjusted start time:', adjustedStartTime);
-  console.log('Original end time:', eventMetadata.end_time);
-  console.log('Adjusted end time:', adjustedEndTime);
 
   const googleEvent = {
     summary: `Clase de ${formData?.courseType ?? ''} - ${formData?.name ?? ''}`,
@@ -328,18 +294,8 @@ async function sendConfirmationEmail(
     const day = date.getUTCDate();
     const month = date.getUTCMonth();
     const months = [
-      'enero',
-      'febrero',
-      'marzo',
-      'abril',
-      'mayo',
-      'junio',
-      'julio',
-      'agosto',
-      'septiembre',
-      'octubre',
-      'noviembre',
-      'diciembre',
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
     ];
     return `${day} de ${months[month]}`;
   }

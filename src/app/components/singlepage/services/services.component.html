@@ -4,7 +4,7 @@
     <path fill-opacity="1" d="M0,128L60,149.3C120,171,240,213,360,192C480,171,600,85,720,85.3C840,85,960,171,1080,197.3C1200,224,1320,192,1380,176L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z" fill="#ffdb67"></path>
   </svg>
   <div class="services-contenu">
-    <div class="keen-slider" #sliderRef>
+    <div *ngIf="isBrowser" class="keen-slider" #sliderRef>
       <div class="keen-slider__slide" *ngFor="let service of services">
         <div class="icon-wrapper">
           <img [src]="service.icon" [alt]="service.alt" />

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Recursos } from '../../models/recursos.model';
+import {authFetch} from "../auth/auth-fetch";
 
 @Injectable({
   providedIn: 'root'
@@ -11,19 +12,19 @@ export class RecursosService {
   constructor() { }
 
   async listerRecursos(): Promise<Recursos[]> {
-    const response = await fetch(`${this.apiUrl}`, { method: 'GET' });
+    const response = await authFetch(`${this.apiUrl}`, { method: 'GET' });
     if (!response.ok) throw new Error('Erreur lors du chargement des ressources');
     return await response.json();
   }
 
   async obtenirParIdRecursos(id: number): Promise<Recursos> {
-    const response = await fetch(`${this.apiUrl}/${id}`, { method: 'GET' });
+    const response = await authFetch(`${this.apiUrl}/${id}`, { method: 'GET' });
     if (!response.ok) throw new Error('Ressource introuvable');
     return await response.json();
   }
 
   async ajouterRecursos(recursos: Recursos): Promise<Recursos> {
-    const response = await fetch(`${this.apiUrl}`, {
+    const response = await authFetch(`${this.apiUrl}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(recursos),
@@ -33,7 +34,7 @@ export class RecursosService {
   }
 
   async modifierRecursos(id: number, recursos: Recursos): Promise<Recursos> {
-    const response = await fetch(`${this.apiUrl}/${id}`, {
+    const response = await authFetch(`${this.apiUrl}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(recursos),
@@ -42,8 +43,8 @@ export class RecursosService {
     return await response.json();
   }
 
-  async supprimerRecursos(id: number): Promise<void> {
-    const response = await fetch(`${this.apiUrl}/${id}`, { method: 'DELETE' });
+  async supprimerRecursos(id: number | undefined): Promise<void> {
+    const response = await authFetch(`${this.apiUrl}/${id}`, { method: 'DELETE' });
     if (!response.ok) throw new Error('Erreur lors de la suppression de la ressource');
   }
 }

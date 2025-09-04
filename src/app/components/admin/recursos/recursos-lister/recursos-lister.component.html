@@ -1,0 +1,29 @@
+<app-menu [menuItems]="menuItems"></app-menu>
+<section class="recursos-lister">
+  <div class="container">
+    <h1>Lista de recursos</h1>
+    <ul class="recursos-liste">
+      <li class="card" *ngFor="let recurso of recursos">
+        <div class="card-header">
+          <h2>{{recurso.titulo}}</h2>
+          <p class="nb-infografias">Nb de infografias: {{recurso.infografias?.length}}</p>
+        </div>
+        <p class="description">{{recurso.description}}</p>
+        <ul class="tags">
+          <li class="tag" *ngFor="let tag of (recurso.tags ? recurso.tags.split(',') : [])">
+            {{ tag.trim() }}
+          </li>
+        </ul>
+        <div class="actions-container">
+          <button
+            type="button"
+            [routerLink]="['/admin-recursos-modificar', recurso.id]"
+          >
+            Modifier
+          </button>          <button (click)="supprimerInfographie(recurso.id)" type="button">Supprimer</button>
+        </div>
+
+      </li>
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,94 @@
+<!-- Menu dynamique -->
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="ajouter-recursos">
+  <div class="container">
+    <div class="ajouter-recursos-container">
+
+      <h1>Añadir un recurso</h1>
+
+      <form [formGroup]="recursosForm" (ngSubmit)="ajouterRecursos()">
+
+        <!-- Banner PNG -->
+        <div class="form-field">
+          <label for="banner">Banner (PNG) *:</label>
+          <input
+            #bannerInput
+            type="file"
+            id="banner"
+            accept="image/png"
+            (change)="onBannerChange($event)"
+            required
+          />
+          <div class="file-info" *ngIf="bannerFileName">
+            <span class="file-name">{{ bannerFileName }}</span>
+            <button type="button" class="btn-remove" (click)="supprimerBanner()">×</button>
+          </div>
+        </div>
+
+        <!-- Título -->
+        <div class="form-field">
+          <label for="titulo">Título *:</label>
+          <input type="text" id="titulo" formControlName="titulo" required />
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-field">
+          <label for="descripcion">Descripción *:</label>
+          <textarea id="descripcion" formControlName="description" rows="5" required></textarea>
+        </div>
+
+        <!-- Etiquetas -->
+        <div class="form-field">
+          <label for="tags">Etiquetas (separadas por comas) *:</label>
+          <input type="text" id="tags" formControlName="tags" placeholder="ejemplo: educación, recursos, PDF" required />
+        </div>
+
+        <!-- Infografías PDF -->
+        <div class="form-field">
+          <label for="infografias">Infografías (PDF) *:</label>
+          <input
+            #infografiasInput
+            type="file"
+            id="infografias"
+            accept="application/pdf"
+            multiple
+            (change)="onInfografiasChange($event)"
+            required
+          />
+          <small class="file-help">Puedes seleccionar múltiples archivos PDF</small>
+
+          <!-- Lista de archivos seleccionados -->
+          <div class="selected-files" *ngIf="infografiaFileNames.length > 0">
+            <h4>Archivos seleccionados:</h4>
+            <ul class="file-list">
+              <li *ngFor="let fileName of infografiaFileNames; let i = index" class="file-item">
+                <span class="file-name">{{ fileName }}</span>
+                <button type="button" class="btn-remove-individual" (click)="supprimerInfografia(i)" [title]="'Eliminar ' + fileName">×</button>
+              </li>
+            </ul>
+            <button type="button" class="btn-remove-all" (click)="supprimerInfografias()">
+              Eliminar todos los archivos
+            </button>
+          </div>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div class="form-erreur-msg" *ngIf="errorMessage !== ''">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Actions formulaire -->
+        <div class="form-actions">
+          <app-action-btn
+            [disabled]="!recursosForm.valid || !banner || infografiaFiles.length === 0"
+            [estMisEnAvant]="true"
+            type="submit"
+            text="Añadir recurso"
+          ></app-action-btn>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
