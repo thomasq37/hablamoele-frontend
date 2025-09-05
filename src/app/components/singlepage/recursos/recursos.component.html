@@ -68,7 +68,7 @@
     </div>
     <!-- Liste filtrée -->
     <ul class="recursos-liste" *ngIf="filteredRecursos.length > 0; else noResults">
-      <li *ngFor="let recurso of filteredRecursos" class="card">
+      <li *ngFor="let recurso of filteredRecursos" class="card" (click)="onDescargar(recurso)">
         <img
           class="recursos-banner"
           [src]="'data:image/png;base64,' + recurso.banner"
@@ -93,8 +93,7 @@
         </div>
         <div class="button-container">
           <button
-            class="recursos-infografias-descargar"
-            (click)="onDescargar(recurso)">
+            class="recursos-infografias-descargar">
             Descargar {{ recurso.infografias?.length || 0 }} infografía(s)
           </button>
 
