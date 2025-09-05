@@ -54,6 +54,39 @@ form {
       }
     }
 
+    /* Multi-select styling */
+    .select-multiple {
+      width: 100%;
+      min-height: 7rem; /* un peu de hauteur pour voir plusieurs items */
+      padding: 0.5rem;
+      border: 2px solid #e1e5e9;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      option {
+        padding: 0.25rem 0.5rem;
+      }
+    }
+
+    .helper {
+      margin-top: 0.375rem;
+
+      small {
+        color: #6c757d;
+      }
+
+      .error {
+        color: #e74c3c;
+      }
+    }
+
     input[type="file"] {
       width: 100%;
       padding: 0.75rem;
@@ -84,7 +117,7 @@ form {
       font-style: italic;
     }
 
-    // Information sur le fichier banner sélectionné
+    /* Banner file chip */
     .file-info {
       margin-top: 0.75rem;
       padding: 0.5rem;
@@ -122,7 +155,7 @@ form {
       }
     }
 
-    // Liste des fichiers PDF sélectionnés
+    /* Liste des PDFs sélectionnés */
     .selected-files {
       margin-top: 1rem;
       padding: 1rem;
@@ -206,7 +239,7 @@ form {
   }
 }
 
-// Message d'erreur
+/* Message d'erreur global */
 .form-erreur-msg {
   color: #721c24;
   font-size: 0.9rem;
@@ -218,27 +251,24 @@ form {
   border-left: 4px solid #dc3545;
 }
 
-// Actions du formulaire
+/* Actions du formulaire */
 .form-actions {
   margin-top: 2rem;
   text-align: center;
 }
 
-// Responsive
+/* Responsive */
 @media (max-width: 768px) {
   .ajouter-recursos {
     .container {
       padding: 0 0.5rem;
     }
-
     .ajouter-recursos-container {
       padding: 1rem;
     }
   }
 
-  h1 {
-    font-size: 1.5rem;
-  }
+  h1 { font-size: 1.5rem; }
 
   form .form-field {
     .file-info,

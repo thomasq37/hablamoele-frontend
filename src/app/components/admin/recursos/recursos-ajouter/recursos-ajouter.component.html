@@ -44,6 +44,62 @@
           <input type="text" id="tags" formControlName="tags" placeholder="ejemplo: educación, recursos, PDF" required />
         </div>
 
+        <!-- Categorías (multi) -->
+        <div class="form-field">
+          <label for="categorias">Categorías (opcional, multi):</label>
+
+          <select
+            id="categorias"
+            class="select-multiple"
+            formControlName="categoriasIds"
+            multiple
+            [disabled]="categoriasLoading || categoriasError !== ''"
+          >
+            <option
+              *ngFor="let cat of categoriasDisponibles; trackBy: trackByCatId"
+              [value]="cat.id"
+            >
+              {{ cat.nombre }}
+            </option>
+          </select>
+
+          <div class="helper">
+            <small *ngIf="categoriasLoading">Cargando categorías…</small>
+            <small class="error" *ngIf="categoriasError">{{ categoriasError }}</small>
+            <small *ngIf="!categoriasLoading && categoriasError === ''">
+              Seleccionadas: {{ recursosForm.value.categoriasIds?.length || 0 }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Niveles (multi) -->
+        <div class="form-field">
+          <label for="niveles">Niveles (opcional, multi):</label>
+
+          <select
+            id="niveles"
+            class="select-multiple"
+            formControlName="nivelesIds"
+            multiple
+            [disabled]="nivelesLoading || nivelesError !== ''"
+          >
+            <option
+              *ngFor="let n of nivelesDisponibles; trackBy: trackByNivelId"
+              [value]="n.id"
+            >
+              {{ n.nombre }}
+            </option>
+          </select>
+
+          <div class="helper">
+            <small *ngIf="nivelesLoading">Cargando niveles…</small>
+            <small class="error" *ngIf="nivelesError">{{ nivelesError }}</small>
+            <small *ngIf="!nivelesLoading && nivelesError === ''">
+              Seleccionados: {{ recursosForm.value.nivelesIds?.length || 0 }}
+            </small>
+          </div>
+        </div>
+
         <!-- Infografías PDF -->
         <div class="form-field">
           <label for="infografias">Infografías (PDF) *:</label>

@@ -1,0 +1,33 @@
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="categorias-lister">
+  <div class="container">
+    <h1>Lista de categorías</h1>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <div class="empty" *ngIf="!errorMessage && categorias?.length === 0">
+      No hay categorías todavía.
+      <a [routerLink]="['/admin-categorias-añadir']">Añadir una categoría</a>
+    </div>
+
+    <ul class="categorias-liste" *ngIf="categorias?.length">
+      <li class="card" *ngFor="let categoria of categorias; trackBy: trackById">
+        <div class="card-header">
+          <h2>{{ categoria.nombre }}</h2>
+        </div>
+
+        <div class="actions-container">
+          <button
+            type="button"
+            [routerLink]="['/admin-categorias-modificar', categoria.id]"
+          >
+            Modificar
+          </button>
+          <button type="button" (click)="supprimerCategoria(categoria.id)">
+            Eliminar
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

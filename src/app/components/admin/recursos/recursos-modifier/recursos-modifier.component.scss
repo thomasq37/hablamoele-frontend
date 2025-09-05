@@ -8,21 +8,22 @@
     font-style: italic;
     font-size: 1rem;
   }
-}.modifier-recursos {
+}
 
-   .container {
-     max-width: 800px;
-     margin: 0 auto;
-     padding: 0 1rem;
-   }
+.modifier-recursos {
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
 
-   .modifier-recursos-container {
-     background: white;
-     padding: 2rem;
-     border-radius: 8px;
-     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-   }
- }
+  .modifier-recursos-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+}
 
 h1 {
   margin: 0 0 2rem 0;
@@ -73,6 +74,33 @@ form {
       }
     }
 
+    /* Select multiple (categorías / niveles) */
+    .select-multiple {
+      width: 100%;
+      min-height: 7rem;
+      padding: 0.5rem;
+      border: 2px solid #e1e5e9;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+      }
+
+      option { padding: 0.25rem 0.5rem; }
+    }
+
+    .helper {
+      margin-top: 0.375rem;
+
+      small { color: #6c757d; }
+
+      .error { color: #e74c3c; }
+    }
+
     input[type="file"] {
       width: 100%;
       padding: 0.75rem;
@@ -83,16 +111,8 @@ form {
       transition: border-color 0.3s ease, background-color 0.3s ease;
       font-size: 1rem;
 
-      &:hover {
-        border-color: #007bff;
-        background-color: #e3f2fd;
-      }
-
-      &:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-      }
+      &:hover { border-color: #007bff; background-color: #e3f2fd; }
+      &:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
     }
 
     .file-help {
@@ -103,7 +123,7 @@ form {
       font-style: italic;
     }
 
-    // Banner actuel
+    /* Banner actuel */
     .current-banner {
       margin: 1rem 0;
       padding: 1rem;
@@ -135,72 +155,10 @@ form {
       background-color: #f8f9fa;
       text-align: center;
 
-      p {
-        margin: 0;
-        color: #6c757d;
-        font-style: italic;
-      }
+      p { margin: 0; color: #6c757d; font-style: italic; }
     }
 
-    // Infographies actuelles
-    .current-infografias {
-      margin: 1rem 0;
-      padding: 1rem;
-      border: 1px solid #e9ecef;
-      border-radius: 6px;
-      background-color: #f8f9fa;
-
-      .file-list {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 0.75rem 0;
-
-        .file-item {
-          padding: 0.5rem 0;
-          border-bottom: 1px solid #dee2e6;
-          display: flex;
-          align-items: center;
-
-          &:last-child {
-            border-bottom: none;
-          }
-
-          .file-name {
-            color: #495057;
-            font-size: 0.9rem;
-
-            &:before {
-              content: "📄";
-              margin-right: 0.5rem;
-            }
-          }
-        }
-      }
-
-      .infografia-info {
-        margin: 0;
-        font-size: 0.9rem;
-        color: #495057;
-        font-weight: 500;
-      }
-    }
-
-    .no-infografias {
-      margin: 1rem 0;
-      padding: 1rem;
-      border: 1px solid #dee2e6;
-      border-radius: 6px;
-      background-color: #f8f9fa;
-      text-align: center;
-
-      p {
-        margin: 0;
-        color: #6c757d;
-        font-style: italic;
-      }
-    }
-
-    // Information sur les nouveaux fichiers sélectionnés
+    /* Infos nouveaux fichiers */
     .file-info {
       margin-top: 0.75rem;
       padding: 0.5rem;
@@ -211,11 +169,10 @@ form {
       align-items: center;
       justify-content: space-between;
 
-
-      }
+      .file-name { font-size: 0.9rem; color: #0c5460; font-weight: 500; }
     }
 
-    // Nouveaux fichiers PDF sélectionnés
+    /* Nouveaux fichiers PDF sélectionnés */
     .selected-files {
       margin-top: 1rem;
       padding: 1rem;
@@ -223,12 +180,7 @@ form {
       border: 1px solid #bee5eb;
       border-radius: 6px;
 
-      h4 {
-        margin: 0 0 0.75rem 0;
-        font-size: 1rem;
-        color: #0c5460;
-        font-weight: 600;
-      }
+      h4 { margin: 0 0 0.75rem 0; font-size: 1rem; color: #0c5460; font-weight: 600; }
 
       .file-list {
         list-style: none;
@@ -241,40 +193,29 @@ form {
           display: flex;
           align-items: center;
 
-          &:last-child {
-            border-bottom: none;
-          }
+          &:last-child { border-bottom: none; }
 
           .file-name {
             color: #0c5460;
             font-size: 0.9rem;
 
-            &:before {
-              content: "📄";
-              margin-right: 0.5rem;
-            }
+            &:before { content: "📄"; margin-right: 0.5rem; }
           }
         }
       }
 
       .btn-remove-all {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.875rem;
+        background: #dc3545; color: white; border: none;
+        padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.875rem;
         transition: background-color 0.3s ease;
 
-        &:hover {
-          background: #c82333;
-        }
+        &:hover { background: #c82333; }
       }
     }
   }
+}
 
-// Message d'erreur
+/* Message d'erreur */
 .form-erreur-msg {
   color: #721c24;
   font-size: 0.9rem;
@@ -286,7 +227,7 @@ form {
   border-left: 4px solid #dc3545;
 }
 
-// Actions du formulaire
+/* Actions */
 .form-actions {
   margin-top: 2rem;
   display: flex;
@@ -295,36 +236,21 @@ form {
   align-items: center;
 
   .btn-secondary {
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+    background: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem;
+    border-radius: 6px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s ease;
 
-    &:hover {
-      background: #5a6268;
-    }
+    &:hover { background: #5a6268; }
   }
 }
 
-// Responsive
+/* Responsive */
 @media (max-width: 768px) {
   .modifier-recursos {
-    .container {
-      padding: 0 0.5rem;
-    }
-
-    .modifier-recursos-container {
-      padding: 1rem;
-    }
+    .container { padding: 0 0.5rem; }
+    .modifier-recursos-container { padding: 1rem; }
   }
 
-  h1 {
-    font-size: 1.5rem;
-  }
+  h1 { font-size: 1.5rem; }
 
   form {
     .form-field {
@@ -332,26 +258,20 @@ form {
       .selected-files,
       .current-banner,
       .current-infografias {
-        .file-name {
-          font-size: 0.8rem;
-          word-break: break-word;
-        }
+        .file-name { font-size: 0.8rem; word-break: break-word; }
       }
 
-      .current-banner .banner-preview {
-        max-height: 150px;
-      }
+      .current-banner .banner-preview { max-height: 150px; }
     }
   }
 
   .form-actions {
     flex-direction: column;
 
-    .btn-secondary {
-      width: 100%;
-    }
+    .btn-secondary { width: 100%; }
   }
 }
+
 .file-name {
   font-size: 0.9rem;
   color: #0c5460;
@@ -373,7 +293,5 @@ form {
   justify-content: center;
   transition: background-color 0.3s ease;
 
-  &:hover {
-    background: #c82333;
-  }
+  &:hover { background: #c82333; }
 }

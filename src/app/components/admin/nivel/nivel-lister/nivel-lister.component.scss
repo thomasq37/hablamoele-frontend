@@ -1,0 +1,37 @@
+.niveles-lister {
+  .container {
+    h1 { margin-top: 2rem; margin-bottom: 2rem; }
+
+    .error { color: #e74c3c; margin-bottom: 1rem; }
+
+    .empty {
+      margin: 1rem 0 2rem;
+      a { margin-left: .5rem; text-decoration: underline; }
+    }
+
+    .niveles-liste {
+      display: flex; flex-direction: column; gap: 1rem;
+
+      .card {
+        border: 1px solid grey; border-radius: 15px; padding: 1rem;
+
+        .card-header {
+          display: flex; justify-content: space-between; align-items: center;
+
+          .id {
+            padding: .5rem 1rem;
+            border: 1px solid #e1e1e1;
+            border-radius: 1rem;
+            background-color: #ffdb67;
+          }
+        }
+
+        .actions-container {
+          margin-top: 1.5rem; display: flex; gap: 1rem;
+
+          button { padding: .25rem .5rem; }
+        }
+      }
+    }
+  }
+}

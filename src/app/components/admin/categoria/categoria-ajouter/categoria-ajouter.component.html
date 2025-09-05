@@ -1,0 +1,42 @@
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="categoria-ajouter">
+  <div class="container">
+    <h1>Añadir categoría</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          [class.invalid]="fieldInvalid('nombre')"
+          placeholder="Ej. Vocabulario, Gramática"
+        />
+        <div class="errors" *ngIf="fieldInvalid('nombre')">
+          <small *ngIf="form.controls['nombre'].hasError('required')">El nombre es obligatorio.</small>
+          <small *ngIf="form.controls['nombre'].hasError('minlength')">Mínimo 2 caracteres.</small>
+          <small *ngIf="form.controls['nombre'].hasError('maxlength')">Máximo 100 caracteres.</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" [disabled]="isSubmitting || form.invalid">
+          {{ isSubmitting ? 'Guardando…' : 'Guardar' }}
+        </button>
+        <button
+          type="button"
+          class="secondary"
+          [routerLink]="['/admin-categorias-listar']"
+          [disabled]="isSubmitting"
+        >
+          Cancelar
+        </button>
+      </div>
+
+      <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </div>
+</section>

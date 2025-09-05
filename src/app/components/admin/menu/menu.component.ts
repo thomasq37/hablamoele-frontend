@@ -14,7 +14,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
-  protected menuEstOuvert = false;
+  @Input() menuEstOuvert = false;
   @Input() menuItems: { nom: string, url: string }[] = [];
   protected grandEcran = false; // ✅ Valeur par défaut sécurisée
 

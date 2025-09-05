@@ -14,5 +14,7 @@ export class AdminDashboardComponent {
   menuItems: {nom: string, url: string }[] = [
     { nom: 'Volver al sitio web', url: '/homepage' },
     { nom: 'Administrar recursos', url: '/admin-recursos-listar' },
+    { nom: 'Administrar categorias', url: '/admin-categorias-listar' },
+    { nom: 'Administrar niveles', url: '/admin-niveles-listar' },
   ];
 }

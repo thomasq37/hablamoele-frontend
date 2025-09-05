@@ -1,0 +1,37 @@
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="modifier-nivel">
+  <div class="container">
+    <div class="modifier-nivel-container">
+      <h1>Modificar nivel</h1>
+
+      <div *ngIf="loading" class="loading-container">
+        <p>Cargando nivel...</p>
+      </div>
+
+      <form *ngIf="!loading" [formGroup]="nivelForm" (ngSubmit)="modifierNivel()">
+        <div class="form-field">
+          <label for="nombre">Nombre *:</label>
+          <input id="nombre" type="text" formControlName="nombre" />
+          <div class="errors" *ngIf="fieldInvalid('nombre')">
+            <small *ngIf="nivelForm.controls['nombre'].hasError('required')">El nombre es obligatorio.</small>
+            <small *ngIf="nivelForm.controls['nombre'].hasError('minlength')">Mínimo 2 caracteres.</small>
+            <small *ngIf="nivelForm.controls['nombre'].hasError('maxlength')">Máximo 100 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="form-erreur-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="retournerALaListe()">Cancelar</button>
+          <app-action-btn
+            [disabled]="!nivelForm.valid"
+            [estMisEnAvant]="true"
+            type="submit"
+            text="Actualizar nivel"
+          ></app-action-btn>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

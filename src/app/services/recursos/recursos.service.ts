@@ -12,7 +12,7 @@ export class RecursosService {
   constructor() { }
 
   async listerRecursos(): Promise<Recursos[]> {
-    const response = await authFetch(`${this.apiUrl}`, { method: 'GET' });
+    const response = await fetch(`${this.apiUrl}`, { method: 'GET' });
     if (!response.ok) throw new Error('Erreur lors du chargement des ressources');
     return await response.json();
   }

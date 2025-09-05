@@ -1,0 +1,209 @@
+// Palette
+$accent: #FFDB67;
+$black: #000;
+$gray-700: #444;
+$gray-400: #bbb;
+$gray-300: #e1e1e1;
+$gray-200: #eee;
+
+// Containers
+#recursos {
+  padding: 2rem 0;
+  font-family: Poppins, serif;
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  h2 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+}
+
+.filters {
+  display: grid;
+  gap: 1rem 1.5rem;
+  grid-template-columns: 1fr;
+  margin-top: 1rem;
+
+  &__actions {
+    grid-column: 1 / -1;
+    margin-top: .25rem;
+  }
+}
+
+.filter-group {
+  &__label {
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $gray-700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: .5rem;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  &__item {
+    margin: 0; // géré par gap
+  }
+}
+
+// Chip bouton
+.filter-chip {
+  appearance: none;
+  border: 1px solid $gray-300;
+  background: #fff;
+  color: $black;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .08s ease;
+
+  &:hover {
+    border-color: $black;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,0,0,.12);
+  }
+
+  &.is-active {
+    background: $accent;
+    border-color: darken($accent, 15%);
+    box-shadow: 0 2px 0 rgba(0,0,0,.06) inset;
+  }
+}
+
+// Lien d’action
+.link-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  color: $gray-700;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+
+  &:hover, &:focus-visible {
+    color: $black;
+    outline: none;
+  }
+}
+
+.recursos-liste{
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 2rem;
+  .card{
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    &:hover,
+    &:focus,
+    &:focus-within {
+      transform: scale(1.005);
+      box-shadow: rgba(58, 59, 60, 0.2) 0px 8px 24px;
+      cursor: pointer;
+      .recursos-infografias-descargar{
+        background-color: #ffdb67 !important;
+      }
+
+    }
+    img{
+      width: 100%;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+
+    }
+    .card-contenu{
+      padding: 1rem;
+      h3{
+        margin: 1rem 0;
+      }
+      .recurso-tags {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #3a3a3a;
+        font-size: 1.2rem;
+
+        .tag {
+          display: inline-flex;
+          align-items: center;
+
+          &:not(:last-child)::after {
+            content: '·'; // point médian (tu peux mettre '•' si tu préfères)
+            display: inline-block;
+            margin: 0 .5rem;
+            color: currentColor;
+          }
+        }
+      }
+
+      .recurso-niveles{
+        li{
+          width: 3.5rem;
+          height: 3.5rem;
+          display: flex;
+          background-color: #fe53be;
+          border-radius: 50%;
+          span{
+            margin: auto;
+            color: white;
+            font-size: 1.2rem;
+          }
+        }
+      }
+      .recursos-infografias-descargar{
+        width: 100%;
+        text-align: left;
+        padding: 1rem;
+        border-radius: 5px;
+        border: none;
+        margin-top: 1rem;
+        font-size: 1.4rem;
+        text-transform: uppercase;
+        background-color: #dfdfdf;
+        font-weight: bold;
+        &.active{
+          background-color: #ffdb67;
+
+        }
+      }
+
+    }
+  }
+}
+@media only screen and (min-width: 650px){
+  .recursos-liste {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media only screen and (min-width: 1000px){
+  .recursos-liste {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

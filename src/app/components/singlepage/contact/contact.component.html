@@ -1,1 +1,122 @@
-<p>contact works!</p>
+<svg class="svg-overflow-top svg-overflow-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+  <path fill-opacity="1" d="M0,128L60,149.3C120,171,240,213,360,192C480,171,600,85,720,85.3C840,85,960,171,1080,197.3C1200,224,1320,192,1380,176L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z" fill="#ffdb67"></path>
+</svg>
+
+<section id="contactsection" class="contact">
+  <div class="contact__container">
+    <!-- Infos de contact -->
+    <aside class="contact__info" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="contact__title">Hazme tus preguntas</h2>
+      <p class="contact__intro">
+        No dude en contactarme para cualquier pregunta o solicitud.
+        Estoy a su disposición por correo electrónico, teléfono o a través
+        de nuestro formulario en línea. Me comprometo a responderle a la
+        mayor brevedad posible.
+      </p>
+
+      <address class="contact__details">
+        <ul class="contact__list">
+          <li class="contact__list-item">
+            <a class="contact__link" href="tel:+34660686918">+34 660 68 69 18</a>
+          </li>
+          <li class="contact__list-item">
+            <a class="contact__link" href="mailto:hablamoseleonline@gmail.com">
+              hablamoseleonline&#64;gmail.com
+            </a>
+          </li>
+        </ul>
+      </address>
+
+      <ul class="contact__social" aria-label="Redes sociales">
+        <li class="contact__social-item">
+          <a class="contact__social-link" target="_blank"
+             href="https://www.facebook.com/share/efHU3rHy6e26wL1u/?mibextid=LQQJ4d">
+            <img class="icone" src="assets/img/contact/facebook-icone.svg">
+            <span class="visually-hidden">Facebook</span>
+          </a>
+        </li>
+        <li class="contact__social-item">
+          <a class="contact__social-link" target="_blank"
+             href="https://www.instagram.com/hablamos.ele?igsh=MTFpaGsxNzl4ZTlybg%3D%3D&utm_source=qr">
+            <img class="icone" src="assets/img/contact/instagram-icone.svg">
+            <span class="visually-hidden">Instagram</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Formulaire -->
+    <div class="contact__form">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form" novalidate>
+        <div class="contact-form__group">
+          <label for="yourname" class="contact-form__label">Tu nombre</label>
+          <input
+            type="text"
+            id="yourname"
+            class="contact-form__control"
+            [class.contact-form__control--error]="isFieldInvalid('name')"
+            [class.contact-form__control--success]="isFieldValid('name')"
+            placeholder="Tu nombre"
+            formControlName="name"
+            [attr.aria-describedby]="getErrorMessage('name') ? 'name-error' : null"
+            [attr.aria-invalid]="isFieldInvalid('name')" />
+          <div *ngIf="getErrorMessage('name')"
+               id="name-error"
+               class="contact-form__error"
+               role="alert">
+            {{ getErrorMessage('name') }}
+          </div>
+        </div>
+
+        <div class="contact-form__group">
+          <label for="yourmail" class="contact-form__label">Tu correo electrónico</label>
+          <input
+            type="email"
+            id="yourmail"
+            class="contact-form__control"
+            [class.contact-form__control--error]="isFieldInvalid('email')"
+            [class.contact-form__control--success]="isFieldValid('email')"
+            placeholder="Correo electrónico"
+            formControlName="email"
+            [attr.aria-describedby]="getErrorMessage('email') ? 'email-error' : null"
+            [attr.aria-invalid]="isFieldInvalid('email')" />
+          <div *ngIf="getErrorMessage('email')"
+               id="email-error"
+               class="contact-form__error"
+               role="alert">
+            {{ getErrorMessage('email') }}
+          </div>
+        </div>
+
+        <div class="contact-form__group">
+          <label for="comment" class="contact-form__label">Tu mensaje</label>
+          <textarea
+            id="comment"
+            class="contact-form__control contact-form__control--textarea"
+            [class.contact-form__control--error]="isFieldInvalid('comment')"
+            [class.contact-form__control--success]="isFieldValid('comment')"
+            placeholder="Hazme tus preguntas"
+            formControlName="comment"
+            [attr.aria-describedby]="getErrorMessage('comment') ? 'comment-error' : null"
+            [attr.aria-invalid]="isFieldInvalid('comment')"></textarea>
+          <div *ngIf="getErrorMessage('comment')"
+               id="comment-error"
+               class="contact-form__error"
+               role="alert">
+            {{ getErrorMessage('comment') }}
+          </div>
+        </div>
+
+        <div class="contact-form__actions">
+          <button
+            class="btn btn--primary contact-form__submit"
+            type="submit"
+            [disabled]="isSubmitting || contactForm.invalid">
+            <span *ngIf="isSubmitting">Enviando...</span>
+            <span *ngIf="!isSubmitting">Enviar</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

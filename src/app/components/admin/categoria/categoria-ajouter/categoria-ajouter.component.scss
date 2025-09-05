@@ -1,0 +1,74 @@
+.categoria-ajouter {
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    h1 {
+      margin: 2rem 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-weight: 600;
+        }
+
+        input {
+          padding: 0.6rem 0.8rem;
+          border: 1px solid #cfcfcf;
+          border-radius: 8px;
+          font-size: 1rem;
+
+          &.invalid {
+            border-color: #e74c3c;
+            outline: none;
+          }
+        }
+
+        .errors {
+          small {
+            color: #e74c3c;
+          }
+        }
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+
+        button {
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          border: 1px solid #e1e1e1;
+          cursor: pointer;
+
+          &.secondary {
+            background: #f6f6f6;
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      .success {
+        color: #1e8e3e;
+      }
+
+      .error {
+        color: #e74c3c;
+      }
+    }
+  }
+}

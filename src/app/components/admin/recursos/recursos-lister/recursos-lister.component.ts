@@ -21,6 +21,7 @@ export class RecursosListerComponent implements OnInit {
   protected tags: string[] = [];
   menuItems: { nom: string; url: string }[] = [
     { nom: 'Volver al sitio web', url: '/homepage' },
+    { nom: 'Admin dashboard', url: '/admin-dashboard' },
     { nom: 'Añadir recursos', url: '/admin-recursos-añadir' },
   ];
   constructor(private recursosService: RecursosService) { }

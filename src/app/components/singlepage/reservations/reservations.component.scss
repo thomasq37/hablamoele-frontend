@@ -9,8 +9,8 @@
       text-align: center;
     }
     .contenu {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       border: 1px solid;
       border-radius: 1.5rem;
       padding: 2rem;
@@ -19,6 +19,13 @@
       app-reservation-form {
         height: 100%;
       }
+    }
+    @media only screen and (min-width: 768px){
+      .contenu{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
     }
   }
 

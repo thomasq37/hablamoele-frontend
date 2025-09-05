@@ -7,6 +7,12 @@ import {AuthGuard} from "./guards/auth.guard";
 import {AdminDashboardComponent} from "./components/admin/admin-dashboard/admin-dashboard.component";
 import {RecursosListerComponent} from "./components/admin/recursos/recursos-lister/recursos-lister.component";
 import {RecursosModifierComponent} from "./components/admin/recursos/recursos-modifier/recursos-modifier.component";
+import {NivelListerComponent} from "./components/admin/nivel/nivel-lister/nivel-lister.component";
+import {NivelAjouterComponent} from "./components/admin/nivel/nivel-ajouter/nivel-ajouter.component";
+import {NivelModifierComponent} from "./components/admin/nivel/nivel-modifier/nivel-modifier.component";
+import {CategoriaModifierComponent} from "./components/admin/categoria/categoria-modifier/categoria-modifier.component";
+import {CategoriaAjouterComponent} from "./components/admin/categoria/categoria-ajouter/categoria-ajouter.component";
+import {CategoriaListerComponent} from "./components/admin/categoria/categoria-lister/categoria-lister.component";
 
 export const routes: Routes = [
   // public
@@ -15,9 +21,18 @@ export const routes: Routes = [
   { path: 'inscription', component: InscriptionComponent},
   { path: 'homepage', component: SinglepageComponent},
   { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard] },
+
   { path: 'admin-recursos-añadir', component: RecursosAjouterComponent, canActivate: [AuthGuard] },
   { path: 'admin-recursos-modificar/:id', component: RecursosModifierComponent, canActivate: [AuthGuard] },
   { path: 'admin-recursos-listar', component: RecursosListerComponent, canActivate: [AuthGuard] },
+
+  { path: 'admin-niveles-añadir', component: NivelAjouterComponent, canActivate: [AuthGuard] },
+  { path: 'admin-niveles-modificar/:id', component: NivelModifierComponent, canActivate: [AuthGuard] },
+  { path: 'admin-niveles-listar', component: NivelListerComponent, canActivate: [AuthGuard] },
+
+  { path: 'admin-categorias-añadir', component: CategoriaAjouterComponent, canActivate: [AuthGuard] },
+  { path: 'admin-categorias-modificar/:id', component: CategoriaModifierComponent, canActivate: [AuthGuard] },
+  { path: 'admin-categorias-listar', component: CategoriaListerComponent, canActivate: [AuthGuard] },
 
   { path: '**', component: InscriptionComponent},
 

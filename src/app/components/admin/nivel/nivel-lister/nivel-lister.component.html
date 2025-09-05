@@ -1,0 +1,26 @@
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="niveles-lister">
+  <div class="container">
+    <h1>Lista de niveles</h1>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <div class="empty" *ngIf="!errorMessage && niveles?.length === 0">
+      No hay niveles todavía.
+      <a [routerLink]="['/admin-niveles-añadir']">Añadir un nivel</a>
+    </div>
+
+    <ul class="niveles-liste" *ngIf="niveles?.length">
+      <li class="card" *ngFor="let nivel of niveles; trackBy: trackById">
+        <div class="card-header">
+          <h2>{{ nivel.nombre }}</h2>
+        </div>
+
+        <div class="actions-container">
+          <button type="button" [routerLink]="['/admin-niveles-modificar', nivel.id]">Modificar</button>
+          <button type="button" (click)="supprimerNivel(nivel.id)">Eliminar</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

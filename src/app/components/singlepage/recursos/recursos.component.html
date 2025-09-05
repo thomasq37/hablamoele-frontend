@@ -1,1 +1,107 @@
-<p>recursos works!</p>
+<section id="recursos" *ngIf="recursos.length > 0">
+  <div class="container">
+    <h2>Recursos para profesores</h2>
+
+    <div class="filters">
+      <!-- Groupe Niveles -->
+      <div class="filter-group" *ngIf="niveles.length > 0">
+        <span class="filter-group__label">Niveles</span>
+        <ul class="filter-group__list">
+          <li class="filter-group__item">
+            <button
+              type="button"
+              class="filter-chip"
+              [class.is-active]="selectedNivelIds.size === 0"
+              (click)="clearNivel()"
+              [attr.aria-pressed]="selectedNivelIds.size === 0 ? 'true' : 'false'"
+              title="Mostrar todos los niveles">
+              Todos
+            </button>
+          </li>
+          <li class="filter-group__item" *ngFor="let nivel of niveles; trackBy: trackByNivelId">
+            <button
+              type="button"
+              class="filter-chip"
+              [class.is-active]="selectedNivelIds.has(nivel.id!)"
+              (click)="toggleNivel(nivel.id!)"
+              [attr.aria-pressed]="selectedNivelIds.has(nivel.id!)">
+              {{ nivel.nombre }}
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Groupe Categorías -->
+      <div class="filter-group" *ngIf="categorias.length > 0">
+        <span class="filter-group__label">Categorías</span>
+        <ul class="filter-group__list">
+          <li class="filter-group__item">
+            <button
+              type="button"
+              class="filter-chip"
+              [class.is-active]="selectedCategoriaIds.size === 0"
+              (click)="clearCategoria()"
+              [attr.aria-pressed]="selectedCategoriaIds.size === 0 ? 'true' : 'false'"
+              title="Mostrar todas las categorías">
+              Todas
+            </button>
+          </li>
+          <li class="filter-group__item" *ngFor="let categoria of categorias; trackBy: trackByCategoriaId">
+            <button
+              type="button"
+              class="filter-chip"
+              [class.is-active]="selectedCategoriaIds.has(categoria.id!)"
+              (click)="toggleCategoria(categoria.id!)"
+              [attr.aria-pressed]="selectedCategoriaIds.has(categoria.id!)">
+              {{ categoria.nombre }}
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Actions -->
+      <div class="filters__actions" *ngIf="hasAnyFilter">
+        <button type="button" class="link-reset" (click)="clearAll()">
+          Reiniciar filtros
+        </button>
+      </div>
+    </div>
+    <!-- Liste filtrée -->
+    <ul class="recursos-liste" *ngIf="filteredRecursos.length > 0; else noResults">
+      <li *ngFor="let recurso of filteredRecursos" class="card">
+        <img
+          class="recursos-banner"
+          [src]="'data:image/png;base64,' + recurso.banner"
+          [alt]="recurso.titulo || 'Banner del recurso'"
+        />
+        <div class="card-contenu">
+          <ul class="recurso-niveles">
+            <li *ngFor="let nivel of recurso.niveles">
+              <span>{{ nivel.nombre }}</span>
+            </li>
+          </ul>
+          <h3>{{ recurso.titulo }}</h3>
+          <p class="description">{{ recurso.description }}</p>
+
+          <ul class="recurso-tags">
+            <li class="tag" *ngFor="let tag of (recurso.tags ? recurso.tags.split(',') : [])">
+              {{ tag.trim() }}
+            </li>
+          </ul>
+
+          <button class="recursos-infografias-descargar">
+            Descargar {{ recurso.infografias?.length || 0 }} infografía(s)
+          </button>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Aucun résultat -->
+    <ng-template #noResults>
+      <p class="recursos-empty">
+        No hay recursos que coincidan con los filtros seleccionados.
+      </p>
+    </ng-template>
+
+  </div>
+</section>

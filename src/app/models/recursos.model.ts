@@ -1,10 +1,15 @@
+import {Nivel} from "./nivel.model";
+import {Categoria} from "./categoria.model";
+
 export interface Recursos {
   id?: number;             // optionnel à la création
   banner?: string | null;  // LONGTEXT côté back
   titulo?: string | null;
   description?: string | null;
   tags?: string | null;
-  infografias?: string[];  // LONGTEXT côté back pour chaque élément
+  infografias?: string[];
+  categorias?: Categoria[];
+  niveles?: Nivel[]// LONGTEXT côté back pour chaque élément
 }
 
 /** Fabrique un objeto vacío “safe” pour init de formulaires */

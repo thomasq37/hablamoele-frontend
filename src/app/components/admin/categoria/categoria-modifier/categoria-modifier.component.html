@@ -1,0 +1,40 @@
+<!-- Menu -->
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="modifier-categoria">
+  <div class="container">
+    <div class="modifier-categoria-container">
+      <h1>Modificar categoría</h1>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading-container">
+        <p>Cargando categoría...</p>
+      </div>
+
+      <!-- Form -->
+      <form *ngIf="!loading" [formGroup]="categoriaForm" (ngSubmit)="modifierCategoria()">
+        <div class="form-field">
+          <label for="nombre">Nombre *:</label>
+          <input id="nombre" type="text" formControlName="nombre" />
+          <div class="errors" *ngIf="fieldInvalid('nombre')">
+            <small *ngIf="categoriaForm.controls['nombre'].hasError('required')">El nombre es obligatorio.</small>
+            <small *ngIf="categoriaForm.controls['nombre'].hasError('minlength')">Mínimo 2 caracteres.</small>
+            <small *ngIf="categoriaForm.controls['nombre'].hasError('maxlength')">Máximo 100 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="form-erreur-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="retournerALaListe()">Cancelar</button>
+          <app-action-btn
+            [disabled]="!categoriaForm.valid"
+            [estMisEnAvant]="true"
+            type="submit"
+            text="Actualizar categoría"
+          ></app-action-btn>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
