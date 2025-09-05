@@ -32,6 +32,7 @@
         .tags{
           display: flex;
           gap: 1rem;
+          flex-wrap: wrap;
           .tag{
             font-size: 1.3rem;
             padding: 0.25rem .5rem;

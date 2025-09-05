@@ -109,10 +109,14 @@ $gray-200: #eee;
   display: grid;
   grid-template-columns: 1fr;
   margin-top: 2rem;
+  gap: 1rem;
   .card{
     border: 1px solid #e1e1e1;
     border-radius: 10px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     &:hover,
     &:focus,
     &:focus-within {
@@ -128,10 +132,17 @@ $gray-200: #eee;
       width: 100%;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
+      margin-top: 0;
+      margin-bottom: 0;
 
     }
     .card-contenu{
       padding: 1rem;
+      margin-top: 0;
+      margin-bottom: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
       h3{
         margin: 1rem 0;
       }
@@ -142,6 +153,8 @@ $gray-200: #eee;
         align-items: center;
         list-style: none;
         padding: 0;
+        margin-bottom: 0;
+
 
         text-transform: uppercase;
         font-weight: bold;
@@ -162,6 +175,10 @@ $gray-200: #eee;
       }
 
       .recurso-niveles{
+        display: flex;
+        gap: .5rem;
+        margin-top: 0;
+        margin-bottom: 0;
         li{
           width: 3.5rem;
           height: 3.5rem;
@@ -175,13 +192,18 @@ $gray-200: #eee;
           }
         }
       }
+
+
+    }
+    .button-container{
+      padding: 1rem;
+      margin-bottom: 0;
       .recursos-infografias-descargar{
         width: 100%;
-        text-align: left;
         padding: 1rem;
+        text-align: left;
         border-radius: 5px;
         border: none;
-        margin-top: 1rem;
         font-size: 1.4rem;
         text-transform: uppercase;
         background-color: #dfdfdf;
@@ -193,6 +215,7 @@ $gray-200: #eee;
       }
 
     }
+
   }
 }
 @media only screen and (min-width: 650px){
