@@ -8,6 +8,7 @@ import { NivelService } from '../../../services/nivel/nivel.service';
 import { Recursos } from '../../../models/recursos.model';
 import { Categoria } from '../../../models/categoria.model';
 import { Nivel } from '../../../models/nivel.model';
+import {DownloaderService} from "../../../services/downloader/downloader.service";
 
 @Component({
   selector: 'app-recursos',
@@ -29,13 +30,31 @@ export class RecursosComponent implements OnInit {
     @Inject(PLATFORM_ID) platformId: Object,
     private recursosService: RecursosService,
     private categoriaService: CategoriaService,
-    private nivelService: NivelService
+    private nivelService: NivelService,
+    private downloader: DownloaderService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.recursos = await this.recursosService.listerRecursos();
     this.categorias = await this.categoriaService.listerCategorias();
     this.niveles = await this.nivelService.listerNiveles();
+  }
+  onDescargar(recurso: Recursos): void {
+    if(recurso.infografias)
+      recurso.infografias.forEach((base64, index) => {
+        const nom = this.buildPdfName(
+          recurso.titulo || 'recurso',
+          `infografia-${index + 1}`
+        );
+        setTimeout(() => this.downloader.downloadBase64Pdf(base64, nom), index * 200);
+      });
+  }
+
+
+  private buildPdfName(recursoTitle: string, infografiaTitle: string): string {
+    const sanitize = (s: string) =>
+      s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '_').replace(/^_+|_+$/g, '');
+    return `${sanitize(recursoTitle)}__${sanitize(infografiaTitle)}.pdf`;
   }
 
   // --- TrackBy

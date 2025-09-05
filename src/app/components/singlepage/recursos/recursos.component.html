@@ -92,9 +92,13 @@
 
         </div>
         <div class="button-container">
-          <button class="recursos-infografias-descargar">
+          <button
+            class="recursos-infografias-descargar"
+            (click)="onDescargar(recurso)">
             Descargar {{ recurso.infografias?.length || 0 }} infografía(s)
           </button>
+
+
         </div>
 
       </li>
