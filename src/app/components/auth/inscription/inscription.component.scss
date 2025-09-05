@@ -1,4 +1,3 @@
-@import "variables";
 
 
 .inscription {
@@ -9,7 +8,7 @@
     .inscription-container{
       h1{
         text-align: center;
-        color: $couleurPrincipale;
+        color: #2883c6;
         margin: 3rem 0;
       }
 
@@ -18,7 +17,7 @@
       form{
         .inscription-rappel-longueur-mdp{
           padding: 0 0 3rem;
-          color: $couleurPrincipale;
+          color: #2883c6;
           text-decoration: underline;
         }
         .inscription-erreur-msg{

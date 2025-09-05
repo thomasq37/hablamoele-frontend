@@ -1,10 +1,9 @@
-@import "variables";
 
 .btn,
 .mis-en-avant:hover{
   padding: 1rem 1.5rem;
-  color: $couleurPrincipale;
-  border: 2px solid $couleurPrincipale;
+  color: #2883c6;
+  border: 2px solid #2883c6;
   border-radius: 5px;
   background: white;
   cursor: pointer;
@@ -31,7 +30,7 @@
 .mis-en-avant{
 
   color: #fff;
-  background-color: $couleurPrincipale;
+  background-color: #2883c6;
   box-shadow: rgba(172, 172, 172, 0.25) 0 8px 15px;
 }
 
