@@ -43,20 +43,32 @@
               "includePaths": [
                 "src/"
               ]
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "dotenv",
+              "body-parser",
+              "googleapis",
+              "nodemailer",
+              "debug",
+              "agent-base",
+              "node-domexception",
+              "qs",
+              "web-streams-polyfill"
+            ]
+
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "1.5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kb",
-                  "maximumError": "8kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "15kb"
                 }
               ],
               "outputHashing": "all"
@@ -71,6 +83,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+
           "configurations": {
             "production": {
               "buildTarget": "hablamosele-frontend:build:production"

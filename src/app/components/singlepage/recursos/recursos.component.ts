@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 
 import { RecursosService } from '../../../services/recursos/recursos.service';
@@ -20,18 +20,20 @@ export class RecursosComponent implements OnInit {
   protected recursos: Recursos[] = [];
   protected categorias: Categoria[] = [];
   protected niveles: Nivel[] = [];
-
+  private isBrowser = false;
   // Sélections
   selectedNivelIds = new Set<number>();
   selectedCategoriaIds = new Set<number>();
 
   constructor(
+    @Inject(PLATFORM_ID) platformId: Object,
     private recursosService: RecursosService,
     private categoriaService: CategoriaService,
     private nivelService: NivelService
   ) {}
 
   async ngOnInit(): Promise<void> {
+    if (!this.isBrowser) return;
     this.recursos = await this.recursosService.listerRecursos();
     this.categorias = await this.categoriaService.listerCategorias();
     this.niveles = await this.nivelService.listerNiveles();
