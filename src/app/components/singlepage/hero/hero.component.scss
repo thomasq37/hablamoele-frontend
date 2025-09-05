@@ -17,8 +17,9 @@
         display: inline-block;
         background: #181715;
       }
+
       h1{
-        font-size: 80px;
+        font-size: 6rem;
         font-weight: 600;
         text-shadow: 5px 5px #f8c418;
         display: block;
@@ -75,6 +76,7 @@
         align-items: flex-start;
         margin-top: 0;
         h1{
+          font-size: 8rem;
           display: block;
           span{
             text-align: left;
