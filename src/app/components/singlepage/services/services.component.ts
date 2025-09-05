@@ -9,10 +9,12 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, NgForOf, NgIf } from '@angular/common';
 
-// ⚠️ On ne fait plus: import KeenSlider from 'keen-slider';
-// ⚠️ Et on ne fait plus: import 'keen-slider/keen-slider.min.css';
-
+// Types utilitaires depuis le package (sans importer le code au build)
 type KeenSliderInstance = import('keen-slider').KeenSliderInstance;
+type KeenSliderOptions  = import('keen-slider').KeenSliderOptions;
+
+// “newable” local pour satisfaire TS
+type KeenSliderCtor = new (root: HTMLElement, options?: KeenSliderOptions) => KeenSliderInstance;
 
 @Component({
   selector: 'app-services',
@@ -57,6 +59,7 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
+
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
@@ -73,8 +76,12 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
   private async initSlider(): Promise<void> {
     if (!this.isBrowser || !this.sliderRef?.nativeElement) return;
 
-    // ✅ Import dynamique (runtime) → évite le souci “not constructable”
-    const { default: KeenSlider } = await import('keen-slider');
+    // Import dynamique pour le runtime navigateur
+    const mod = await import('keen-slider');
+
+    // Certaines versions exposent un default non-“newable”.
+    // On cast vers un constructeur compatible.
+    const KeenSlider = (mod.default ?? (mod as unknown)) as unknown as KeenSliderCtor;
 
     this.slider = new KeenSlider(this.sliderRef.nativeElement, {
       loop: true,
@@ -85,21 +92,20 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
         '(min-width: 1000px)': { slides: { perView: 3, spacing: 20 } }
       },
       slides: { perView: 1, spacing: 20 },
-      created: (slider: KeenSliderInstance) => {
+      created: (slider) => {
         this.dots = Array.from({ length: slider.track.details.slides.length }, (_, i) => i);
         setTimeout(() => slider.update(), 0);
         setTimeout(() => this.startAutoplay(), 100);
       },
-      slideChanged: (slider: KeenSliderInstance) => {
+      slideChanged: (slider) => {
         this.currentSlide = slider.track.details.rel;
       },
       dragStarted: () => this.stopAutoplay(),
       dragEnded: () => this.startAutoplay()
     });
 
-    // Pause au survol
     this.sliderRef.nativeElement.addEventListener('mouseover', () => this.stopAutoplay());
-    this.sliderRef.nativeElement.addEventListener('mouseout', () => this.startAutoplay());
+    this.sliderRef.nativeElement.addEventListener('mouseout',  () => this.startAutoplay());
   }
 
   startAutoplay() {
