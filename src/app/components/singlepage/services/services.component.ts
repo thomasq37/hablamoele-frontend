@@ -70,6 +70,9 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
   }
 
   private initSlider(): void {
+    if (!this.isBrowser || typeof window === 'undefined' || !this.sliderRef?.nativeElement) {
+      return;
+    }
     try {
       this.slider = new KeenSlider(this.sliderRef.nativeElement, {
         loop: true,
