@@ -4,7 +4,7 @@ import {
   Output,
   EventEmitter,
   Inject,
-  PLATFORM_ID
+  PLATFORM_ID, OnInit
 } from '@angular/core';
 import { isPlatformBrowser, NgIf } from '@angular/common';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
@@ -22,7 +22,7 @@ type Slot = { start: Date; end: Date };
   template: `<full-calendar *ngIf="isBrowser" [options]="calendarOptions"></full-calendar>`,
   imports: [FullCalendarModule, NgIf]
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
   @Input() googleApiKey!: string;
   @Input() calendarId!: string;
   @Output() slotToggled = new EventEmitter<Slot>();
