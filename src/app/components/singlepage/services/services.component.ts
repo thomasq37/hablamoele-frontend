@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, NgForOf, NgIf } from '@angular/common';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
-import 'keen-slider/keen-slider.min.css';
 
 @Component({
   selector: 'app-services',
