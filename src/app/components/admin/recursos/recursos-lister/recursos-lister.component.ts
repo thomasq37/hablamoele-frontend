@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {MenuComponent} from "../../menu/menu.component";
 import {Recursos} from "../../../../models/recursos.model";
 import {RecursosService} from "../../../../services/recursos/recursos.service";
@@ -19,13 +19,16 @@ import {RouterLink} from "@angular/router";
 export class RecursosListerComponent implements OnInit {
   protected recursos: Recursos[] = [];
   protected tags: string[] = [];
+  private isBrowser = false;
+
   menuItems: { nom: string; url: string }[] = [
     { nom: 'Volver al sitio web', url: '/homepage' },
     { nom: 'Admin dashboard', url: '/admin-dashboard' },
     { nom: 'Añadir recursos', url: '/admin-recursos-añadir' },
   ];
-  constructor(private recursosService: RecursosService) { }
+  constructor(private recursosService: RecursosService, @Inject(PLATFORM_ID) platformId: Object) { }
   ngOnInit(): void {
+    if (!this.isBrowser) return;
     this.recursosService.listerRecursos().then(recursos => {
       this.recursos = recursos;
     })

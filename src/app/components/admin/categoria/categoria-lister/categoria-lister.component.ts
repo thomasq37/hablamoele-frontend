@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -16,6 +16,7 @@ import {CategoriaService} from "../../../../services/categoria/categoria.service
 export class CategoriaListerComponent implements OnInit {
   protected categorias: Categoria[] = [];
   protected errorMessage = '';
+  private isBrowser = false;
 
   menuItems: { nom: string; url: string }[] = [
     { nom: 'Volver al sitio web', url: '/homepage' },
@@ -23,9 +24,10 @@ export class CategoriaListerComponent implements OnInit {
     { nom: 'Añadir categoría', url: '/admin-categorias-añadir' },
   ];
 
-  constructor(private categoriaService: CategoriaService) {}
+  constructor(private categoriaService: CategoriaService, @Inject(PLATFORM_ID) platformId: Object,) {}
 
   ngOnInit(): void {
+    if (!this.isBrowser) return;
     this.categoriaService.listerCategorias()
       .then(cats => this.categorias = cats)
       .catch(err => {

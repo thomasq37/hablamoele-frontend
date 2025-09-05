@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -16,6 +16,7 @@ import { NivelService } from '../../../../services/nivel/nivel.service'; // <-- 
 export class NivelListerComponent implements OnInit {
   protected niveles: Nivel[] = [];
   protected errorMessage = '';
+  private isBrowser = false;
 
   menuItems: { nom: string; url: string }[] = [
     { nom: 'Volver al sitio web', url: '/homepage' },
@@ -23,9 +24,10 @@ export class NivelListerComponent implements OnInit {
     { nom: 'Añadir nivel', url: '/admin-niveles-añadir' },
   ];
 
-  constructor(private nivelService: NivelService) {}
+  constructor(private nivelService: NivelService, @Inject(PLATFORM_ID) platformId: Object) {}
 
   ngOnInit(): void {
+    if (!this.isBrowser) return;
     this.nivelService.listerNiveles()
       .then(ns => this.niveles = ns)
       .catch(err => {
