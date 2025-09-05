@@ -27,7 +27,6 @@ export class NivelListerComponent implements OnInit {
   constructor(private nivelService: NivelService, @Inject(PLATFORM_ID) platformId: Object) {}
 
   ngOnInit(): void {
-    if (!this.isBrowser) return;
     this.nivelService.listerNiveles()
       .then(ns => this.niveles = ns)
       .catch(err => {

@@ -33,7 +33,6 @@ export class RecursosComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    if (!this.isBrowser) return;
     this.recursos = await this.recursosService.listerRecursos();
     this.categorias = await this.categoriaService.listerCategorias();
     this.niveles = await this.nivelService.listerNiveles();

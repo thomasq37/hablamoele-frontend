@@ -28,7 +28,6 @@ export class RecursosListerComponent implements OnInit {
   ];
   constructor(private recursosService: RecursosService, @Inject(PLATFORM_ID) platformId: Object) { }
   ngOnInit(): void {
-    if (!this.isBrowser) return;
     this.recursosService.listerRecursos().then(recursos => {
       this.recursos = recursos;
     })

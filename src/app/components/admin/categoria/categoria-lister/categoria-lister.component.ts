@@ -27,7 +27,6 @@ export class CategoriaListerComponent implements OnInit {
   constructor(private categoriaService: CategoriaService, @Inject(PLATFORM_ID) platformId: Object,) {}
 
   ngOnInit(): void {
-    if (!this.isBrowser) return;
     this.categoriaService.listerCategorias()
       .then(cats => this.categorias = cats)
       .catch(err => {
