@@ -8,7 +8,11 @@ import {
   PLATFORM_ID
 } from '@angular/core';
 import { isPlatformBrowser, NgForOf, NgIf } from '@angular/common';
-import KeenSlider, { KeenSliderInstance } from 'keen-slider';
+
+// ⚠️ On ne fait plus: import KeenSlider from 'keen-slider';
+// ⚠️ Et on ne fait plus: import 'keen-slider/keen-slider.min.css';
+
+type KeenSliderInstance = import('keen-slider').KeenSliderInstance;
 
 @Component({
   selector: 'app-services',
@@ -53,14 +57,12 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
   ngAfterViewInit(): void {
     if (!this.isBrowser) return;
-
-    // ✅ Attendre l'hydratation complète
     setTimeout(() => {
       if (this.sliderRef?.nativeElement && !this.slider) {
         this.initSlider();
@@ -68,51 +70,42 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  private initSlider(): void {
-    if (!this.isBrowser || typeof window === 'undefined' || !this.sliderRef?.nativeElement) {
-      return;
-    }
-    try {
-      this.slider = new KeenSlider(this.sliderRef.nativeElement, {
-        loop: true,
-        mode: 'free-snap',
-        breakpoints: {
-          '(min-width: 320px)': { slides: { perView: 1, spacing: 5 } },
-          '(min-width: 400px)': { slides: { perView: 1, spacing: 5 } },
-          '(min-width: 1000px)': { slides: { perView: 3, spacing: 20 } }
-        },
-        slides: {
-          perView: 1,
-          spacing: 20
-        },
-        created: (slider) => {
-          this.dots = [...Array(slider.track.details.slides.length).keys()];
-          // ✅ Forcer une mise à jour après création
-          setTimeout(() => slider.update(), 0);
-          setTimeout(() => this.startAutoplay(), 100);
-        },
-        slideChanged: (slider) => {
-          this.currentSlide = slider.track.details.rel;
-        },
-        dragStarted: () => this.stopAutoplay(),
-        dragEnded: () => this.startAutoplay()
-      });
+  private async initSlider(): Promise<void> {
+    if (!this.isBrowser || !this.sliderRef?.nativeElement) return;
 
-      // ✅ Événements souris
-      this.sliderRef.nativeElement.addEventListener('mouseover', () => this.stopAutoplay());
-      this.sliderRef.nativeElement.addEventListener('mouseout', () => this.startAutoplay());
+    // ✅ Import dynamique (runtime) → évite le souci “not constructable”
+    const { default: KeenSlider } = await import('keen-slider');
 
-    } catch (error) {
-      console.error('Erreur slider:', error);
-    }
+    this.slider = new KeenSlider(this.sliderRef.nativeElement, {
+      loop: true,
+      mode: 'free-snap',
+      breakpoints: {
+        '(min-width: 320px)':  { slides: { perView: 1, spacing: 5 } },
+        '(min-width: 400px)':  { slides: { perView: 1, spacing: 5 } },
+        '(min-width: 1000px)': { slides: { perView: 3, spacing: 20 } }
+      },
+      slides: { perView: 1, spacing: 20 },
+      created: (slider: KeenSliderInstance) => {
+        this.dots = Array.from({ length: slider.track.details.slides.length }, (_, i) => i);
+        setTimeout(() => slider.update(), 0);
+        setTimeout(() => this.startAutoplay(), 100);
+      },
+      slideChanged: (slider: KeenSliderInstance) => {
+        this.currentSlide = slider.track.details.rel;
+      },
+      dragStarted: () => this.stopAutoplay(),
+      dragEnded: () => this.startAutoplay()
+    });
+
+    // Pause au survol
+    this.sliderRef.nativeElement.addEventListener('mouseover', () => this.stopAutoplay());
+    this.sliderRef.nativeElement.addEventListener('mouseout', () => this.startAutoplay());
   }
 
   startAutoplay() {
     if (!this.isBrowser || !this.slider) return;
     this.stopAutoplay();
-    this.intervalId = setInterval(() => {
-      this.slider?.next();
-    }, 5000);
+    this.intervalId = setInterval(() => this.slider?.next(), 5000);
   }
 
   stopAutoplay() {
