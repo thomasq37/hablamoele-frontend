@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {isPlatformBrowser, NgIf} from '@angular/common';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
@@ -21,25 +21,23 @@ type Slot = { start: Date; end: Date };
 
 })
 export class ReservationsComponent implements OnInit {
-  googleApiKey = 'AIzaSyDpqLXh5YkIDTy6nIfR2lAkKqiiI5HKIgc';
-  calendarId = 'hablamoseleonline@gmail.com';
+  @ViewChild('reservationForm') reservationForm!: ReservationFormComponent;
+  googleApiKey = '';
+  calendarId = '';
+  unitAmount = 0;
   selectedSlots: Slot[] = [];
-  unitAmount = 1800;
   showCalendar = false;
   private stripe: Stripe | null = null;
   private isBrowser = false;
-
+  loading = false;
   constructor(
     private api: ReservationService,
     @Inject(PLATFORM_ID) platformId: Object,
-    private cdRef: ChangeDetectorRef
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
   async ngOnInit() {
-    // Récupère les infos publiques pour le calendrier
-    /**/
 
     // Stripe côté navigateur
     if (this.isBrowser) {
@@ -74,16 +72,12 @@ export class ReservationsComponent implements OnInit {
     }
   }
 
-
-
-
-
   async onFormSubmit(formData: any) {
     if (!this.selectedSlots.length) {
       alert('Sélectionne au moins un créneau.');
       return;
     }
-
+    this.loading = true;
     const eventsMetadata = this.selectedSlots.map(s => ({
       start_time: new Date(s.start).toISOString(),
       end_time: new Date(s.end).toISOString(),
@@ -92,20 +86,24 @@ export class ReservationsComponent implements OnInit {
     // 1ère heure gratuite si cochée et un seul créneau
     if (formData?.freeTrial && this.selectedSlots.length === 1) {
       this.api.createFreeSession({ formData, eventsMetadata }).subscribe({
-        next: () => alert('Sesión gratuita confirmada. Revisa tu email.'),
-        error: () => alert('Error creación sesión gratuita')
+        next: () => {
+          alert('Sesión gratuita confirmada. Revisa tu email.');
+          this.afterReservation();
+        },
+        error: () => {
+          alert('Error creación sesión gratuita');
+          this.loading = false;
+        }
       });
       return;
     }
-
-    // Paiement Stripe
     const items = this.selectedSlots.map(s => {
       const hours = (new Date(s.end).getTime() - new Date(s.start).getTime()) / 3_600_000;
       return {
         price_data: {
           currency: 'eur',
           product_data: { name: 'Reserva de clase' },
-          unit_amount: this.unitAmount, // centimes par heure
+          unit_amount: this.unitAmount,
         },
         quantity: hours,
       };
@@ -115,5 +113,10 @@ export class ReservationsComponent implements OnInit {
       this.api.createCheckoutSession({ items, formData, eventsMetadata })
     );
     await this.stripe?.redirectToCheckout({ sessionId: session.id });
+  }
+  private afterReservation() {
+    this.loading = false;
+    this.selectedSlots = [];
+    this.reservationForm.resetForm();
   }
 }

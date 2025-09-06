@@ -14,12 +14,9 @@ type Slot = { start: Date; end: Date };
 })
 export class ReservationFormComponent implements OnChanges {
   @Output() submitReservation = new EventEmitter<any>();
-
-  /** créneaux sélectionnés (depuis le parent) */
   @Input() selectedSlots: Slot[] = [];
-
-  /** prix unitaire en centimes (ex: 3000 = 30,00€) */
   @Input() unitAmount = 0;
+  @Input() loading = false;
 
   form: FormGroup = this.fb.group({
     name: ['', Validators.required],
@@ -33,45 +30,45 @@ export class ReservationFormComponent implements OnChanges {
   });
 
   constructor(private fb: FormBuilder) {}
-
-  // --- Getters utiles ---
+  resetForm() {
+    this.form.reset({
+      courseType: 'niveles',
+      level: 'a1',
+      levelCatalan: 'a1',
+      topic: 'viajes',
+      freeTrial: false
+    });
+  }
   get courseType(): string { return this.form.get('courseType')!.value as string; }
 
-  /** total d'heures sélectionnées (suppose des créneaux entiers d'1h) */
   get selectedHours(): number {
     return this.selectedSlots.reduce((sum, s) => {
       const h = (new Date(s.end).getTime() - new Date(s.start).getTime()) / 3_600_000;
       return sum + h;
     }, 0);
   }
-
-  /** la case "Primera hora" est permise uniquement si 1 seul créneau de 1h */
   get allowFreeTrial(): boolean {
     return this.selectedSlots.length === 1 && this.selectedHours === 1;
   }
-
-  /** prix total en centimes selon sélection + case cochée */
   get priceCents(): number {
-    // Si aucun créneau sélectionné, prix = 0
     if (this.selectedSlots.length === 0) {
       return 0;
     }
-
-    // si la première heure gratuite est cochée ET autorisée
     const free = this.allowFreeTrial && this.form.get('freeTrial')!.value === true ? 1 : 0;
     const payableHours = Math.max(0, this.selectedHours - free);
     return Math.round(payableHours * this.unitAmount);
   }
 
-  /** libellé du bouton "Reservar — 45 €" ou juste "Reservar" si 0€ */
   get submitLabel(): string {
+    if (this.loading) {
+      return 'Reservar en curso...';
+    }
     const euros = (this.priceCents / 100);
     return euros > 0
       ? `Reservar — ${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(euros)}`
       : 'Reservar';
   }
 
-  /** bouton activé uniquement si formulaire valide + au moins 1 créneau */
   get canSubmit(): boolean {
     return this.form.valid && this.selectedSlots.length > 0;
   }
@@ -79,14 +76,13 @@ export class ReservationFormComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedSlots']) {
       const ctrl = this.form.get('freeTrial')!;
-      // Si les conditions sont réunies → activer la checkbox
       if (this.allowFreeTrial) {
         if (ctrl.disabled) {
           ctrl.enable({ emitEvent: false });
         }
       } else {
         if (ctrl.enabled) {
-          ctrl.setValue(false, { emitEvent: false }); // décocher si elle était cochée
+          ctrl.setValue(false, { emitEvent: false });
           ctrl.disable({ emitEvent: false });
         }
       }
@@ -102,7 +98,6 @@ export class ReservationFormComponent implements OnChanges {
 
     const raw = this.form.getRawValue();
 
-    // validations conditionnelles
     if (raw.courseType === 'tematicos' && !raw.topic) {
       alert('Selecciona una temática.'); return;
     }
@@ -113,7 +108,6 @@ export class ReservationFormComponent implements OnChanges {
       alert('Selecciona un nivel.'); return;
     }
 
-    // payload pour le parent
     const payload = {
       name: raw.name,
       mail: raw.mail,

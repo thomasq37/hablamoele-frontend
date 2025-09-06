@@ -13,8 +13,10 @@
       </app-calendar>
 
       <app-reservation-form
+        #reservationForm
         [selectedSlots]="selectedSlots"
         [unitAmount]="unitAmount"
+        [loading]="loading"
         (submitReservation)="onFormSubmit($event)">
       </app-reservation-form>
     </div>
