@@ -170,9 +170,4 @@ header{
     }
   }
 }
-button, a {
-  -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu */
-  -webkit-touch-callout: none;              /* (optionnel) empêche le menu contextuel */
-  outline: none;
-  color: black !important;/* Retire le contour */
-}
+

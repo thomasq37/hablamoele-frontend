@@ -5,7 +5,12 @@ $gray-700: #444;
 $gray-400: #bbb;
 $gray-300: #e1e1e1;
 $gray-200: #eee;
-
+button, a {
+  -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu */
+  -webkit-touch-callout: none;              /* (optionnel) empêche le menu contextuel */
+  outline: none;
+  color: black !important;/* Retire le contour */
+}
 // Containers
 #recursos {
   padding: 2rem 0;
