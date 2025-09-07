@@ -40,7 +40,7 @@ export class RecursosComponent implements OnInit {
     this.niveles = await this.nivelService.listerNiveles();
   }
   onDescargar(recurso: Recursos): void {
-    if(recurso.infografias)
+    if(recurso.infografias){
       recurso.infografias.forEach((base64, index) => {
         const nom = this.buildPdfName(
           recurso.titulo || 'recurso',
@@ -48,6 +48,16 @@ export class RecursosComponent implements OnInit {
         );
         setTimeout(() => this.downloader.downloadBase64Pdf(base64, nom), index * 200);
       });
+      if(recurso.id){
+        this.recursosService.incrementerVue(recurso.id).then(reponse =>{
+          if (reponse == null) {
+            console.log("Descarga no ha sido añadida a estadísticas (acción de admin o usuario conectado)");
+          } else {
+            console.log("Descarga añadida a estadísticas");
+          }
+        })
+      }
+    }
   }
 
 

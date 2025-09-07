@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Recursos } from '../../models/recursos.model';
 import {authFetch} from "../auth/auth-fetch";
+import {RecursosStatistiquesDTO} from "../../models/recursos-statistiques-dto.model";
+import {AuthGuard} from "../../guards/auth.guard";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,7 @@ import {authFetch} from "../auth/auth-fetch";
 export class RecursosService {
   private apiUrl = `${environment.apiUrl}/recursos`;
 
-  constructor() { }
+  constructor(private authGuard: AuthGuard) { }
 
   async listerRecursos(): Promise<Recursos[]> {
     const response = await fetch(`${this.apiUrl}`, { method: 'GET' });
@@ -46,5 +48,20 @@ export class RecursosService {
   async supprimerRecursos(id: number | undefined): Promise<void> {
     const response = await authFetch(`${this.apiUrl}/${id}`, { method: 'DELETE' });
     if (!response.ok) throw new Error('Erreur lors de la suppression de la ressource');
+  }
+
+  async listerStatsRecursos(): Promise<RecursosStatistiquesDTO[]> {
+    const response = await authFetch(`${this.apiUrl}/stats`, { method: 'GET' });
+    if (!response.ok) throw new Error('Erreur lors du chargement des statistiques');
+    return await response.json();
+  }
+
+  async incrementerVue(id: number): Promise<RecursosStatistiquesDTO | null> {
+    if (this.authGuard.isLoggedIn()) {
+      return null;
+    }
+    const response = await fetch(`${this.apiUrl}/${id}/ajouter-visualisation`, { method: 'POST' });
+    if (!response.ok) throw new Error("Erreur lors de l'incrément des vues");
+    return await response.json();
   }
 }

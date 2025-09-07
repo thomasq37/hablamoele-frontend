@@ -13,6 +13,9 @@ import {NivelModifierComponent} from "./components/admin/nivel/nivel-modifier/ni
 import {CategoriaModifierComponent} from "./components/admin/categoria/categoria-modifier/categoria-modifier.component";
 import {CategoriaAjouterComponent} from "./components/admin/categoria/categoria-ajouter/categoria-ajouter.component";
 import {CategoriaListerComponent} from "./components/admin/categoria/categoria-lister/categoria-lister.component";
+import {
+  EstadisticasComponent
+} from "./components/admin/estadisticas/estadisticas-lista-descargar/estadisticas.component";
 
 export const routes: Routes = [
   // public
@@ -33,6 +36,7 @@ export const routes: Routes = [
   { path: 'admin-categorias-añadir', component: CategoriaAjouterComponent, canActivate: [AuthGuard] },
   { path: 'admin-categorias-modificar/:id', component: CategoriaModifierComponent, canActivate: [AuthGuard] },
   { path: 'admin-categorias-listar', component: CategoriaListerComponent, canActivate: [AuthGuard] },
+  { path: 'admin-estadisticas', component: EstadisticasComponent, canActivate: [AuthGuard] },
 
   { path: '**', component: InscriptionComponent},
 

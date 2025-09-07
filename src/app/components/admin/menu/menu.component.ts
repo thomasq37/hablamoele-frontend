@@ -47,4 +47,8 @@ export class MenuComponent {
     }
     this.router.navigate(['/homepage']);
   }
+
+  retournerAuSite() {
+    this.router.navigate(['/homepage']);
+  }
 }

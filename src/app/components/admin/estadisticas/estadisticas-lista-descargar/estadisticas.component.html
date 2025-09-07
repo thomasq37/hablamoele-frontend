@@ -1,0 +1,13 @@
+<app-menu [menuItems]="menuItems"></app-menu>
+
+<section class="estadisticas-lista-descargar">
+  <div class="container">
+    <h1>Estadísticas de descarga por recurso</h1>
+    <ul class="estadisticas-lista">
+      <li *ngFor="let recurso of recursosDTO">
+        <h2>{{recurso.titulo}}</h2>
+        <p>Descargado {{recurso.nbVisualisaciones ? recurso.nbVisualisaciones : '0'}} veces</p>
+      </li>
+    </ul>
+  </div>
+</section>
