@@ -9,27 +9,22 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, NgForOf, NgIf } from '@angular/common';
 
-// Types utilitaires depuis le package (sans importer le code au build)
-type KeenSliderInstance = import('keen-slider').KeenSliderInstance;
-type KeenSliderOptions  = import('keen-slider').KeenSliderOptions;
-
-// “newable” local pour satisfaire TS
-type KeenSliderCtor = new (root: HTMLElement, options?: KeenSliderOptions) => KeenSliderInstance;
+type EmblaCarouselType = import('embla-carousel').EmblaCarouselType;
+type EmblaOptionsType = import('embla-carousel').EmblaOptionsType;
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  templateUrl: './services.component.html',
   imports: [NgForOf, NgIf],
+  templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss']
 })
 export class ServicesComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('sliderRef') sliderRef!: ElementRef<HTMLElement>;
-
-  slider: KeenSliderInstance | null = null;
-  currentSlide = 0;
+  @ViewChild('viewport') viewportRef!: ElementRef<HTMLElement>;
+  embla: EmblaCarouselType | null = null;
   dots: number[] = [];
-  intervalId: any;
+  currentSlide = 0;
+  autoplayInterval: any;
   isBrowser = false;
 
   services = [
@@ -59,73 +54,53 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
-
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
     if (!this.isBrowser) return;
-    setTimeout(() => {
-      if (this.sliderRef?.nativeElement && !this.slider) {
-        this.initSlider();
-      }
-    }, 0);
-  }
 
-  private async initSlider(): Promise<void> {
-    if (!this.isBrowser || !this.sliderRef?.nativeElement) return;
+    const { default: EmblaCarousel } = await import('embla-carousel');
 
-    // Import dynamique pour le runtime navigateur
-    const mod = await import('keen-slider');
-
-    // Certaines versions exposent un default non-“newable”.
-    // On cast vers un constructeur compatible.
-    const KeenSlider = (mod.default ?? (mod as unknown)) as unknown as KeenSliderCtor;
-
-    this.slider = new KeenSlider(this.sliderRef.nativeElement, {
+    this.embla = EmblaCarousel(this.viewportRef.nativeElement, {
       loop: true,
-      mode: 'free-snap',
+      align: 'start',
+      slidesToScroll: 1,
       breakpoints: {
-        '(min-width: 320px)':  { slides: { perView: 1, spacing: 5 } },
-        '(min-width: 400px)':  { slides: { perView: 1, spacing: 5 } },
-        '(min-width: 1000px)': { slides: { perView: 3, spacing: 20 } }
-      },
-      slides: { perView: 1, spacing: 20 },
-      created: (slider) => {
-        this.dots = Array.from({ length: slider.track.details.slides.length }, (_, i) => i);
-        setTimeout(() => slider.update(), 0);
-        setTimeout(() => this.startAutoplay(), 100);
-      },
-      slideChanged: (slider) => {
-        this.currentSlide = slider.track.details.rel;
-      },
-      dragStarted: () => this.stopAutoplay(),
-      dragEnded: () => this.startAutoplay()
+        '(min-width: 1000px)': { slidesToScroll: 1 }
+      }
+    } as EmblaOptionsType);
+
+    this.dots = Array.from({ length: this.embla.slideNodes().length }, (_, i) => i);
+
+    this.embla.on('select', () => {
+      this.currentSlide = this.embla!.selectedScrollSnap();
     });
 
-    this.sliderRef.nativeElement.addEventListener('mouseover', () => this.stopAutoplay());
-    this.sliderRef.nativeElement.addEventListener('mouseout',  () => this.startAutoplay());
+    this.startAutoplay();
+  }
+
+  goToSlide(index: number) {
+    this.embla?.scrollTo(index);
   }
 
   startAutoplay() {
-    if (!this.isBrowser || !this.slider) return;
     this.stopAutoplay();
-    this.intervalId = setInterval(() => this.slider?.next(), 5000);
+    this.autoplayInterval = setInterval(() => {
+      this.embla?.scrollNext();
+    }, 4000);
   }
 
   stopAutoplay() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
+    if (this.autoplayInterval) {
+      clearInterval(this.autoplayInterval);
+      this.autoplayInterval = null;
     }
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.stopAutoplay();
-    if (this.slider) {
-      this.slider.destroy();
-      this.slider = null;
-    }
+    this.embla?.destroy();
   }
 }
