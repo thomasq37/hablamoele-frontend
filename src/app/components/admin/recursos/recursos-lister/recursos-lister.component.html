@@ -7,7 +7,7 @@
         <div class="card-header">
           <h2>{{recurso.titulo}}</h2>
         </div>
-        <p class="nb-infografias">Nb de infografias: {{recurso.infografias?.length}}</p>
+        <p class="nb-infografias">Nb de infografias: {{recurso.nbInfografias}}</p>
 
         <p class="description">{{recurso.description}}</p>
         <ul class="tags">
@@ -18,12 +18,9 @@
         <div class="actions-container">
           <button
             type="button"
-            [routerLink]="['/admin-recursos-modificar', recurso.id]"
-          >
-            Modificar
-          </button>          <button (click)="supprimerInfographie(recurso.id)" type="button">Eliminar</button>
+            [routerLink]="['/admin-recursos-modificar', recurso.id]">Modificar</button>
+          <button (click)="supprimerInfographie(recurso.id)" type="button">Eliminar</button>
         </div>
-
       </li>
     </ul>
   </div>

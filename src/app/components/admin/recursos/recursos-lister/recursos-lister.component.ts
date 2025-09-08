@@ -4,6 +4,7 @@ import {Recursos} from "../../../../models/recursos.model";
 import {RecursosService} from "../../../../services/recursos/recursos.service";
 import {NgForOf} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {RecursosDTO} from "../../../../models/recursos-dto.model";
 
 @Component({
   selector: 'app-recursos-lister',
@@ -17,7 +18,7 @@ import {RouterLink} from "@angular/router";
   styleUrl: './recursos-lister.component.scss'
 })
 export class RecursosListerComponent implements OnInit {
-  protected recursos: Recursos[] = [];
+  protected recursos: RecursosDTO[] = [];
   protected tags: string[] = [];
   private isBrowser = false;
 
