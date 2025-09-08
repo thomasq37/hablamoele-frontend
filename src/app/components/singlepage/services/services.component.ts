@@ -7,24 +7,26 @@ import {
   Inject,
   PLATFORM_ID
 } from '@angular/core';
-import { isPlatformBrowser, NgForOf, NgIf } from '@angular/common';
+import { isPlatformBrowser, NgForOf } from '@angular/common';
 
+// (Types optionnels : OK en prod si 'embla-carousel' est en dependencies)
 type EmblaCarouselType = import('embla-carousel').EmblaCarouselType;
 type EmblaOptionsType = import('embla-carousel').EmblaOptionsType;
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [NgForOf, NgIf],
+  imports: [NgForOf],
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss']
 })
 export class ServicesComponent implements AfterViewInit, OnDestroy {
   @ViewChild('viewport') viewportRef!: ElementRef<HTMLElement>;
+
   embla: EmblaCarouselType | null = null;
   dots: number[] = [];
   currentSlide = 0;
-  autoplayInterval: any;
+  autoplayInterval: number | null = null;
   isBrowser = false;
 
   services = [
@@ -58,49 +60,67 @@ export class ServicesComponent implements AfterViewInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  async ngAfterViewInit() {
+  /**
+   * Import dynamique "safe" compatible CJS/ESM :
+   * - sur certains builds (SSR/Heroku), embla-carousel est vu comme un module CJS sans "call signatures".
+   * - on normalise en récupérant (mod.default || mod) puis on caste en fonction.
+   */
+  private async loadEmblaFactory(): Promise<(root: HTMLElement, options?: EmblaOptionsType) => EmblaCarouselType> {
+    const mod: any = await import('embla-carousel'); // pas de top-level import pour éviter SSR
+    const factory = (mod && mod.default) ? mod.default : mod;
+    return factory as (root: HTMLElement, options?: EmblaOptionsType) => EmblaCarouselType;
+  }
+
+  async ngAfterViewInit(): Promise<void> {
     if (!this.isBrowser) return;
+    if (!this.viewportRef?.nativeElement) return;
 
-    const { default: EmblaCarousel } = await import('embla-carousel');
+    const EmblaCarousel = await this.loadEmblaFactory();
 
+    // Options minimales (mise en page gérée par ton SCSS : 1 slide mobile, 3 desktop)
     this.embla = EmblaCarousel(this.viewportRef.nativeElement, {
       loop: true,
       align: 'start',
-      slidesToScroll: 1,
-      breakpoints: {
-        '(min-width: 1000px)': { slidesToScroll: 1 }
-      }
+      slidesToScroll: 1
     } as EmblaOptionsType);
 
-    this.dots = Array.from({ length: this.embla.slideNodes().length }, (_, i) => i);
+    if (this.embla) {
+      const slideCount = this.embla.slideNodes().length;
+      this.dots = Array.from({ length: slideCount }, (_, i) => i);
 
-    this.embla.on('select', () => {
-      this.currentSlide = this.embla!.selectedScrollSnap();
-    });
+      this.embla.on('select', () => {
+        // embla non nul ici mais on reste safe
+        const selected = this.embla?.selectedScrollSnap();
+        if (typeof selected === 'number') this.currentSlide = selected;
+      });
+    }
 
     this.startAutoplay();
   }
 
-  goToSlide(index: number) {
+  goToSlide(index: number): void {
     this.embla?.scrollTo(index);
   }
 
-  startAutoplay() {
+  startAutoplay(): void {
     this.stopAutoplay();
-    this.autoplayInterval = setInterval(() => {
+    this.autoplayInterval = window.setInterval(() => {
       this.embla?.scrollNext();
     }, 4000);
   }
 
-  stopAutoplay() {
-    if (this.autoplayInterval) {
+  stopAutoplay(): void {
+    if (this.autoplayInterval !== null) {
       clearInterval(this.autoplayInterval);
       this.autoplayInterval = null;
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.stopAutoplay();
-    this.embla?.destroy();
+    try {
+      this.embla?.destroy();
+    } catch { /* ignore */ }
+    this.embla = null;
   }
 }
