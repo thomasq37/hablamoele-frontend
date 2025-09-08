@@ -40,7 +40,6 @@ export class RecursosComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.recursos = await this.recursosService.listerRecursos();
-    console.log(this.recursos);
     this.categorias = await this.categoriaService.listerCategorias();
     this.niveles = await this.nivelService.listerNiveles();
   }

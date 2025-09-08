@@ -42,8 +42,6 @@ export class EstadisticasComponent implements OnInit {
   ngOnInit(): void {
     this.recursosService.obtenirToutesVisualisations().then(response => {
       this.recursosVisualisacionDTO = response;
-      console.log('Données brutes:', response);
-
       // Grouper et traiter les données
       this.grouperParRecurso();
       this.calculerTotalVisualisations();
@@ -84,8 +82,6 @@ export class EstadisticasComponent implements OnInit {
     this.recursosGroupes.sort((a, b) =>
       b.derniereVisualisacion.getTime() - a.derniereVisualisacion.getTime()
     );
-
-    console.log('Données groupées:', this.recursosGroupes);
   }
 
   private calculerTotalVisualisations(): void {
