@@ -1,13 +1,82 @@
-<app-menu [menuItems]="menuItems"></app-menu>
+<div class="estadisticas-container">
+  <app-menu [menuItems]="menuItems"></app-menu>
 
-<section class="estadisticas-lista-descargar">
-  <div class="container">
-    <h1>Estadísticas de descarga por recurso</h1>
-    <ul class="estadisticas-lista">
-      <li *ngFor="let recurso of recursosDTO">
-        <h2>{{recurso.titulo}}</h2>
-        <p>Descargado {{recurso.nbVisualisaciones ? recurso.nbVisualisaciones : '0'}} veces</p>
-      </li>
-    </ul>
-  </div>
-</section>
+  <main class="estadisticas-content">
+    <header class="estadisticas-header">
+      <h1>Estadísticas de descarga por recurso</h1>
+
+      <!-- Résumé global -->
+      <div class="stats-summary">
+        <div class="stat-card">
+          <h3>Total descargas</h3>
+          <span class="stat-number">{{ totalVisualisations }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>Descargas hoy</h3>
+          <span class="stat-number">{{ getVisualisationsAujourdhui() }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>Recursos descargados</h3>
+          <span class="stat-number">{{ recursosGroupes.length }}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Liste des recursos avec statistiques -->
+    <section class="recursos-stats" *ngIf="recursosGroupes.length > 0">
+      <div class="recurso-card" *ngFor="let groupe of recursosGroupes">
+
+        <!-- En-tête du recurso -->
+        <div class="recurso-header" (click)="toggleDetails(groupe)">
+          <div class="recurso-info">
+            <h3 class="recurso-title">{{ groupe.recursosTitulo }}</h3>
+            <p class="recurso-id">ID: {{ groupe.recursosId }}</p>
+          </div>
+
+          <div class="recurso-stats-summary">
+            <div class="stat-item">
+              <span class="stat-label">Total:</span>
+              <span class="stat-value">{{ groupe.totalVisualisations }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Hoy:</span>
+              <span class="stat-value">{{ getVisualisationsAujordhuiParRecurso(groupe) }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Última:</span>
+              <span class="stat-value">{{ formatDate(groupe.derniereVisualisacion) }}</span>
+            </div>
+          </div>
+
+          <button class="toggle-btn" [class.expanded]="groupe.showDetails">
+            {{ groupe.showDetails ? '▼' : '▶' }}
+          </button>
+        </div>
+
+        <!-- Détails des visualisations (pliable) -->
+        <div class="recurso-details" *ngIf="groupe.showDetails">
+          <h4>Detalles de descargas ({{ groupe.visualisations.length }})</h4>
+
+          <div class="visualisations-list">
+            <div class="visualisation-item" *ngFor="let visualisation of groupe.visualisations">
+              <div class="visu-date">
+                {{ formatDate(visualisation.dateVisualisacion) }}
+              </div>
+              <div class="visu-ip">
+                IP: {{ visualisation.ip }}
+              </div>
+              <div class="visu-id">
+                #{{ visualisation.id }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Message si aucune donnée -->
+    <div class="no-data" *ngIf="recursosGroupes.length === 0">
+      <p>No hay estadísticas de descarga disponibles.</p>
+    </div>
+  </main>
+</div>

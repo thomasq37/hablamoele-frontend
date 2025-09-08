@@ -7,7 +7,7 @@ header{
     .menu-icones{
       display: flex;
       justify-content: space-between;
-      
+
       button{
         background: none;
         border: none;
@@ -25,6 +25,7 @@ header{
       right: 0;
       background-color: #ffdb67;
       padding: 1rem 0 0;
+      z-index: 1000;
       li{
         a{
           width: 100%;
