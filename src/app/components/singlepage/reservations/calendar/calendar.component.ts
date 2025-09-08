@@ -58,21 +58,12 @@ export class CalendarComponent implements OnInit {
       scrollTime: '09:00:00',
       timeZone: 'Europe/Madrid', // ou 'Europe/Paris' selon ton cas
       googleCalendarApiKey: this.googleApiKey,
+      longPressDelay: 1,
       eventSources: [
-        /*{
-          events: function(fetchInfo, successCallback, failureCallback) {
-            // Appelle la fonction pour obtenir les créneaux indisponibles
-            const unavailableSlots = getUnavailableSlots();
-            successCallback(unavailableSlots);
-          },
-          display: 'background',
-          className: 'unavailable-slot'
-        },*/
         {
           googleCalendarId: 'hablamoseleonline@gmail.com',  // Remplace par l'ID de ton calendrier Google
           className: 'gcal-event',  // Appliquer une classe pour styler les événements Google
           eventDataTransform: function(eventData) {
-            // Remplacer le titre par "Réservé"
             eventData.title = 'Reservado';
             eventData.url = '';
             return eventData;
