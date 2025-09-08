@@ -1,4 +1,12 @@
-<section id="recursos" *ngIf="recursos.length > 0">
+<div class="loader-container" *ngIf="isLoading">
+  <div class="container">
+    <h2>Recursos para profesores</h2>
+    <span class="loader"></span>
+  </div>
+</div>
+
+<!-- Contenu principal une fois chargé -->
+<section id="recursos" *ngIf="!isLoading && recursos.length > 0">
   <div class="container">
     <h2>Recursos para profesores</h2>
 

@@ -21,7 +21,7 @@ export class RecursosComponent implements OnInit {
   protected categorias: Categoria[] = [];
   protected niveles: Nivel[] = [];
   private isBrowser = false;
-
+  protected isLoading = true
   // Sélections
   selectedNivelIds = new Set<number>();
   selectedCategoriaIds = new Set<number>();
@@ -38,10 +38,23 @@ export class RecursosComponent implements OnInit {
     private downloader: DownloaderService
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    this.recursos = await this.recursosService.listerRecursos();
-    this.categorias = await this.categoriaService.listerCategorias();
-    this.niveles = await this.nivelService.listerNiveles();
+  ngOnInit(): void {
+    Promise.all([
+      this.recursosService.listerRecursos(),
+      this.categoriaService.listerCategorias(),
+      this.nivelService.listerNiveles()
+    ])
+      .then(([recursos, categorias, niveles]) => {
+        this.recursos = recursos;
+        this.categorias = categorias;
+        this.niveles = niveles;
+      })
+      .catch(error => {
+        console.error('Erreur lors du chargement:', error);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   async onDescargar(recurso: RecursosDTO): Promise<void> {
