@@ -1,24 +1,26 @@
 <!-- src/app/components/reservations/reservations.component.html -->
 <section id="reservations">
   <div class="container">
-    <h2>Reserva de clases</h2>
-    <p>Disfrute de una hora completamente gratuita para descubrir mis servicios sin compromiso. Para ello, haga clic en 'Primera hora' en el formulario 😃</p>
+    <p>¿Quieres approvechar de una hora gratuita? <span>Haz clic dentro el formulario</span></p>
+    <h2>Reserva una classe conmigo</h2>
+    <div class="calendar-container">
+      <div class="contenu">
+        <app-calendar
+          *ngIf="showCalendar"
+          [googleApiKey]="'AIzaSyDpqLXh5YkIDTy6nIfR2lAkKqiiI5HKIgc'"
+          [calendarId]="'hablamoseleonline@gmail.com'"
+          (slotToggled)="onSlotToggled($event)">
+        </app-calendar>
 
-    <div class="contenu">
-      <app-calendar
-        *ngIf="showCalendar"
-        [googleApiKey]="'AIzaSyDpqLXh5YkIDTy6nIfR2lAkKqiiI5HKIgc'"
-        [calendarId]="'hablamoseleonline@gmail.com'"
-        (slotToggled)="onSlotToggled($event)">
-      </app-calendar>
-
-      <app-reservation-form
-        #reservationForm
-        [selectedSlots]="selectedSlots"
-        [unitAmount]="unitAmount"
-        [loading]="loading"
-        (submitReservation)="onFormSubmit($event)">
-      </app-reservation-form>
+        <app-reservation-form
+          #reservationForm
+          [selectedSlots]="selectedSlots"
+          [unitAmount]="unitAmount"
+          [loading]="loading"
+          (submitReservation)="onFormSubmit($event)">
+        </app-reservation-form>
+      </div>
     </div>
+
   </div>
 </section>
