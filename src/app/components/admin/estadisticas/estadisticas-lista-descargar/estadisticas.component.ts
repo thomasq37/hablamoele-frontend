@@ -110,7 +110,10 @@ export class EstadisticasComponent implements OnInit {
       return dateVisu.getTime() === aujourdhui.getTime();
     }).length;
   }
-
+  getTotalIPsDistinctes(): number {
+    const ipsUniques = new Set(this.recursosVisualisacionDTO.map(v => v.ip));
+    return ipsUniques.size;
+  }
   formatDate(date: Date | string): string {
     const d = typeof date === 'string' ? new Date(date) : date;
     return d.toLocaleDateString('es-ES', {
