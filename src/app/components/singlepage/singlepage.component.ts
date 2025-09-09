@@ -6,6 +6,7 @@ import {ServicesComponent} from "./services/services.component";
 import {ReservationsComponent} from "./reservations/reservations.component";
 import {RecursosComponent} from "./recursos/recursos.component";
 import {ContactComponent} from "./contact/contact.component";
+import {FooterComponent} from "./footer/footer.component";
 
 @Component({
   selector: 'app-singlepage',
@@ -17,7 +18,8 @@ import {ContactComponent} from "./contact/contact.component";
     ServicesComponent,
     ReservationsComponent,
     RecursosComponent,
-    ContactComponent
+    ContactComponent,
+    FooterComponent
   ],
   templateUrl: './singlepage.component.html',
   styleUrl: './singlepage.component.scss'
