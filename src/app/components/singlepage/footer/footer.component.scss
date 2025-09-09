@@ -1,6 +1,10 @@
 footer{
   background-color: #ffdb67;
   padding: 3rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   .container{
     display: flex;
     justify-content: center;
