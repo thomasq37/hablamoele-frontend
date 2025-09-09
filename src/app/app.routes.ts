@@ -16,6 +16,7 @@ import {CategoriaListerComponent} from "./components/admin/categoria/categoria-l
 import {
   EstadisticasComponent
 } from "./components/admin/estadisticas/estadisticas-lista-descargar/estadisticas.component";
+import {RecursosComponent} from "./components/singlepage/recursos/recursos.component";
 
 export const routes: Routes = [
   // public
@@ -23,6 +24,8 @@ export const routes: Routes = [
   { path: 'connexion', component: ConnexionComponent},
   { path: 'inscription', component: InscriptionComponent},
   { path: 'homepage', component: SinglepageComponent},
+  { path: 'recursos', component: RecursosComponent},
+
   { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard] },
 
   { path: 'admin-recursos-añadir', component: RecursosAjouterComponent, canActivate: [AuthGuard] },

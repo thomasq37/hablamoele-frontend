@@ -19,6 +19,15 @@ export class RecursosService {
     if (!response.ok) throw new Error('Erreur lors du chargement des ressources');
     return await response.json();
   }
+
+  async listerDernieresInfographies(): Promise<RecursosDTO[]> {
+    const response = await fetch(`${this.apiUrl}/ultimas`, { method: 'GET' });
+    if (!response.ok) {
+      throw new Error('Erreur lors du chargement des dernières infographies');
+    }
+    return await response.json();
+  }
+
   async obtenirInfografiasIdRecursos(id: number): Promise<string[]>{
     const response = await fetch(`${this.apiUrl}/${id}/infografias`, { method: 'GET' });
     if (!response.ok) throw new Error('Ressource introuvable');

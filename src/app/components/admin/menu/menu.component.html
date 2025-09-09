@@ -14,7 +14,7 @@
         <li *ngFor="let item of menuItems">
           <a href="{{item.url}}">{{ item.nom }}</a>
         </li>
-        <li><a (click)="deconnexion()">Desconnectar</a></li>
+        <li *ngIf="menuAdmin"><a (click)="deconnexion()">Desconnectar</a></li>
       </ul>
     </nav>
   </div>

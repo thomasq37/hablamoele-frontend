@@ -16,7 +16,8 @@ import { isPlatformBrowser } from '@angular/common';
 export class MenuComponent {
   @Input() menuEstOuvert = false;
   @Input() menuItems: { nom: string, url: string }[] = [];
-  protected grandEcran = false; // ✅ Valeur par défaut sécurisée
+  @Input() menuAdmin = true;
+  protected grandEcran = false;
 
   constructor(
     private router: Router,

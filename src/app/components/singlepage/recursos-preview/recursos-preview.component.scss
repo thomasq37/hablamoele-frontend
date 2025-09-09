@@ -36,7 +36,6 @@ h2 {
 }
 // Containers
 #recursos {
-  padding-bottom: 2rem ;
   font-family: Poppins, serif;
 
 
@@ -121,6 +120,25 @@ h2 {
   &:hover, &:focus-visible {
     color: $black;
     outline: none;
+  }
+}
+.container-button-ver-mas{
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+  cursor: pointer;
+
+  button{
+    cursor: pointer;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    font-size: 4rem;
+    text-transform: uppercase;
+    color: #ffdb67 !important;
+    border-bottom: 1px solid black;
+    box-shadow: none;
+    border-radius: 0;
   }
 }
 

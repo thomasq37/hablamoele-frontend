@@ -1,9 +1,8 @@
-<app-menu [menuItems]="menuItems" [menuAdmin]="false"></app-menu>
 <div class="loader-container" *ngIf="isLoading">
   <div class="container">
-<!--
-    <h2>Recursos para profesores</h2>
--->
+    <!--
+        <h2>Recursos para profesores</h2>
+    -->
     <span class="loader"></span>
   </div>
 </div>
@@ -11,9 +10,9 @@
 <!-- Contenu principal une fois chargé -->
 <section id="recursos" *ngIf="!isLoading && recursos.length > 0">
   <div class="container">
-<!--
-    <h2>Recursos para profesores</h2>
--->
+    <!--
+        <h2>Recursos para profesores</h2>
+    -->
 
     <div class="filters">
       <!-- Groupe Niveles -->
@@ -25,18 +24,17 @@
               type="button"
               class="filter-chip"
               [class.is-active]="selectedNivelIds.size === 0"
-              (click)="clearNivel()"
               [attr.aria-pressed]="selectedNivelIds.size === 0 ? 'true' : 'false'"
               title="Mostrar todos los niveles">
               Todos
             </button>
           </li>
-          <li class="filter-group__item" *ngFor="let nivel of niveles; trackBy: trackByNivelId">
+          <li class="filter-group__item" *ngFor="let nivel of niveles;">
             <button
               type="button"
               class="filter-chip"
               [class.is-active]="selectedNivelIds.has(nivel.id!)"
-              (click)="toggleNivel(nivel.id!)"
+              (click)="naviuerARecursos()"
               [attr.aria-pressed]="selectedNivelIds.has(nivel.id!)">
               {{ nivel.nombre }}
             </button>
@@ -53,18 +51,17 @@
               type="button"
               class="filter-chip"
               [class.is-active]="selectedCategoriaIds.size === 0"
-              (click)="clearCategoria()"
               [attr.aria-pressed]="selectedCategoriaIds.size === 0 ? 'true' : 'false'"
               title="Mostrar todas las categorías">
               Todas
             </button>
           </li>
-          <li class="filter-group__item" *ngFor="let categoria of categorias; trackBy: trackByCategoriaId">
+          <li class="filter-group__item" *ngFor="let categoria of categorias;">
             <button
               type="button"
               class="filter-chip"
               [class.is-active]="selectedCategoriaIds.has(categoria.id!)"
-              (click)="toggleCategoria(categoria.id!)"
+              (click)="naviuerARecursos()"
               [attr.aria-pressed]="selectedCategoriaIds.has(categoria.id!)">
               {{ categoria.nombre }}
             </button>
@@ -73,16 +70,11 @@
       </div>
 
       <!-- Actions -->
-      <div class="filters__actions" *ngIf="hasAnyFilter">
-        <button type="button" class="link-reset" (click)="clearAll()">
-          Reiniciar filtros
-        </button>
-      </div>
     </div>
 
     <!-- Liste filtrée -->
-    <ul class="recursos-liste" *ngIf="filteredRecursos.length > 0; else noResults">
-      <li *ngFor="let recurso of filteredRecursos"
+    <ul class="recursos-liste">
+      <li *ngFor="let recurso of recursos"
           class="card"
           [class.downloading]="isDownloading(recurso.id)"
           [class.disabled]="isDownloading(recurso.id)"
@@ -123,13 +115,8 @@
 
       </li>
     </ul>
-
-    <!-- Aucun résultat -->
-    <ng-template #noResults>
-      <p class="recursos-empty">
-        No hay recursos que coincidan con los filtros seleccionados.
-      </p>
-    </ng-template>
+    <div (click)="naviuerARecursos()" class="container-button-ver-mas">
+      <button >Ver mas</button>
+    </div>
   </div>
 </section>
-<app-footer></app-footer>

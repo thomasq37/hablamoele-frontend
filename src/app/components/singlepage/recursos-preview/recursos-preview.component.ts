@@ -1,25 +1,25 @@
 import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
-
-import { RecursosService } from '../../../services/recursos/recursos.service';
-import { CategoriaService } from '../../../services/categoria/categoria.service';
-import { NivelService } from '../../../services/nivel/nivel.service';
-import { Categoria } from '../../../models/categoria.model';
-import { Nivel } from '../../../models/nivel.model';
-import {DownloaderService} from "../../../services/downloader/downloader.service";
+import {NgForOf, NgIf} from "@angular/common";
 import {RecursosDTO} from "../../../models/recursos-dto.model";
+import {Categoria} from "../../../models/categoria.model";
+import {Nivel} from "../../../models/nivel.model";
+import {RecursosService} from "../../../services/recursos/recursos.service";
+import {CategoriaService} from "../../../services/categoria/categoria.service";
+import {NivelService} from "../../../services/nivel/nivel.service";
+import {DownloaderService} from "../../../services/downloader/downloader.service";
 import {Router} from "@angular/router";
-import {MenuComponent} from "../../admin/menu/menu.component";
-import {FooterComponent} from "../footer/footer.component";
 
 @Component({
-  selector: 'app-recursos',
+  selector: 'app-recursos-preview',
   standalone: true,
-  imports: [NgForOf, NgIf, MenuComponent, FooterComponent],
-  templateUrl: './recursos.component.html',
-  styleUrl: './recursos.component.scss'
+    imports: [
+        NgForOf,
+        NgIf
+    ],
+  templateUrl: './recursos-preview.component.html',
+  styleUrl: './recursos-preview.component.scss'
 })
-export class RecursosComponent implements OnInit {
+export class RecursosPreviewComponent implements OnInit {
   protected recursos: RecursosDTO[] = [];
   protected categorias: Categoria[] = [];
   protected niveles: Nivel[] = [];
@@ -32,9 +32,7 @@ export class RecursosComponent implements OnInit {
   // États de téléchargement
   downloadingRecursos = new Set<number>(); // IDs des recursos en cours de téléchargement
   downloadProgress = new Map<number, { current: number, total: number }>(); // Progression
-  menuItems = [
-    { nom: 'Inicio', url: '/homepage' }
-  ];
+
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
     private recursosService: RecursosService,
@@ -46,7 +44,7 @@ export class RecursosComponent implements OnInit {
 
   ngOnInit(): void {
     Promise.all([
-      this.recursosService.listerRecursos(),
+      this.recursosService.listerDernieresInfographies(),
       this.categoriaService.listerCategorias(),
       this.nivelService.listerNiveles()
     ])
@@ -152,54 +150,6 @@ export class RecursosComponent implements OnInit {
 
     return `Descargar ${recurso.nbInfografias} infografía(s)`;
   }
-
-  // --- TrackBy
-  trackByNivelId = (_: number, n: Nivel) => n.id;
-  trackByCategoriaId = (_: number, c: Categoria) => c.id;
-
-  // --- Sélecteurs (toggle)
-  toggleNivel(id?: number): void {
-    if (id == null) return;
-    this.selectedNivelIds.has(id) ? this.selectedNivelIds.delete(id) : this.selectedNivelIds.add(id);
-  }
-
-  toggleCategoria(id?: number): void {
-    if (id == null) return;
-    this.selectedCategoriaIds.has(id) ? this.selectedCategoriaIds.delete(id) : this.selectedCategoriaIds.add(id);
-  }
-
-  clearNivel(): void {
-    this.selectedNivelIds.clear();
-  }
-
-  clearCategoria(): void {
-    this.selectedCategoriaIds.clear();
-  }
-
-  clearAll(): void {
-    this.clearNivel();
-    this.clearCategoria();
-  }
-
-  get hasAnyFilter(): boolean {
-    return this.selectedNivelIds.size > 0 || this.selectedCategoriaIds.size > 0;
-  }
-
-  // --- Filtrage local
-  get filteredRecursos(): RecursosDTO[] {
-    const byNivel = (r: RecursosDTO) =>
-      this.selectedNivelIds.size === 0 ||
-      (Array.isArray(r.niveles) &&
-        r.niveles.some((n: Nivel) => n?.id != null && this.selectedNivelIds.has(n.id!)));
-
-    const byCategoria = (r: RecursosDTO) =>
-      this.selectedCategoriaIds.size === 0 ||
-      (Array.isArray(r.categorias) &&
-        r.categorias.some((c: Categoria) => c?.id != null && this.selectedCategoriaIds.has(c.id!)));
-
-    return this.recursos.filter(r => byNivel(r) && byCategoria(r));
-  }
-
   naviuerARecursos() {
     this.router.navigate(['/recursos']);
   }
