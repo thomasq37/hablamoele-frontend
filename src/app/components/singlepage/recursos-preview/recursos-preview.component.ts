@@ -137,18 +137,18 @@ export class RecursosPreviewComponent implements OnInit {
 
   getDownloadButtonText(recurso: RecursosDTO): string {
     if (!recurso.id) {
-      return `Descargar ${recurso.nbInfografias} infografía(s)`;
+      return `Descargar`;
     }
 
     if (this.isDownloading(recurso.id)) {
       const progress = this.getDownloadProgress(recurso.id);
       if (progress) {
-        return `Descargando... ${progress.current}/${progress.total}`;
+        return `Descargando...`;
       }
       return 'Descargando...';
     }
 
-    return `Descargar ${recurso.nbInfografias} infografía(s)`;
+    return `Descargar`;
   }
   naviuerARecursos() {
     this.router.navigate(['/recursos']);

@@ -35,6 +35,7 @@ export class NivelModifierComponent implements OnInit {
   ) {
     this.nivelForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      color: ['', Validators.required],
     });
   }
 
@@ -51,7 +52,7 @@ export class NivelModifierComponent implements OnInit {
   private async chargerNivel(): Promise<void> {
     try {
       const n: Nivel = await this.nivelService.obtenirParIdNivel(parseInt(this.nivelId, 10));
-      this.nivelForm.patchValue({ nombre: n?.nombre ?? '' });
+      this.nivelForm.patchValue({ nombre: n?.nombre ?? '', color: n?.color ?? '' });
     } catch (e: any) {
       this.errorMessage = e?.message || 'Error al cargar el nivel.';
     } finally {
@@ -75,6 +76,7 @@ export class NivelModifierComponent implements OnInit {
     const payload: Nivel = {
       id: parseInt(this.nivelId, 10),
       nombre: this.nivelForm.value.nombre?.trim() || null,
+      color: this.nivelForm.value.color?.trim() || null,
     };
 
     try {

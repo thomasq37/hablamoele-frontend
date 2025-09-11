@@ -19,6 +19,12 @@
             <small *ngIf="nivelForm.controls['nombre'].hasError('maxlength')">Máximo 100 caracteres.</small>
           </div>
         </div>
+        <input
+          id="color"
+          type="text"
+          formControlName="color"
+          placeholder="#F5F5F5"
+        />
 
         <div class="form-erreur-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
 

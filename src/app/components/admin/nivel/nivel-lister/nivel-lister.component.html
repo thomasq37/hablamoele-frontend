@@ -14,7 +14,9 @@
       <li class="card" *ngFor="let nivel of niveles; trackBy: trackById">
         <div class="card-header">
           <h2>{{ nivel.nombre }}</h2>
+
         </div>
+        <p>{{ nivel.color }}</p>
 
         <div class="actions-container">
           <button type="button" [routerLink]="['/admin-niveles-modificar', nivel.id]">Modificar</button>

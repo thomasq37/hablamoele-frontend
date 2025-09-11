@@ -17,6 +17,7 @@ import {NivelService} from "../../../../services/nivel/nivel.service";
 export class NivelAjouterComponent {
   protected form: FormGroup = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    color: ['', Validators.required],
   });
 
   protected isSubmitting = false;
@@ -50,7 +51,9 @@ export class NivelAjouterComponent {
     }
 
     const nivel: Nivel = createNivel({
-      nombre: this.form.value.nombre?.trim() || null
+      nombre: this.form.value.nombre?.trim() || null,
+      color: this.form.value.color?.trim() || null
+
     });
 
     this.isSubmitting = true;

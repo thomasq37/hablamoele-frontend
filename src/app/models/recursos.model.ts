@@ -10,5 +10,6 @@ export interface Recursos {
   infografias?: string[];
   categorias?: Categoria[];
   niveles?: Nivel[];
-
+  nbInfografias: number;
+  nbCahiersActivite: number;
 }

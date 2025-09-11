@@ -99,6 +99,38 @@
             </small>
           </div>
         </div>
+        <div class="form-field">
+          <label for="nbInfografias">Número de infografías *:</label>
+          <input
+            type="number"
+            id="nbInfografias"
+            formControlName="nbInfografias"
+            min="0"
+            required
+          />
+          <div class="helper">
+            <small *ngIf="recursosForm.get('nbInfografias')?.invalid && recursosForm.get('nbInfografias')?.touched">
+              Campo obligatorio. Introduce un número válido.
+            </small>
+          </div>
+        </div>
+
+        <!-- Nombre de cuadernos de actividad -->
+        <div class="form-field">
+          <label for="nbCahiersActivite">Número de cuadernos de actividad *:</label>
+          <input
+            type="number"
+            id="nbCahiersActivite"
+            formControlName="nbCahiersActivite"
+            min="0"
+            required
+          />
+          <div class="helper">
+            <small *ngIf="recursosForm.get('nbCahiersActivite')?.invalid && recursosForm.get('nbCahiersActivite')?.touched">
+              Campo obligatorio. Introduce un número válido.
+            </small>
+          </div>
+        </div>
 
         <!-- Infografías PDF -->
         <div class="form-field">

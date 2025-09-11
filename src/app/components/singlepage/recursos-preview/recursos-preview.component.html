@@ -90,13 +90,20 @@
 
         <div class="card-contenu">
           <ul class="recurso-niveles">
-            <li *ngFor="let nivel of recurso.niveles">
+            <li [style.background-color]="nivel.color"  *ngFor="let nivel of recurso.niveles">
               <span>{{ nivel.nombre }}</span>
             </li>
           </ul>
           <h3>{{ recurso.titulo }}</h3>
           <p class="description">{{ recurso.description }}</p>
-
+          <ul class="recurso-nb-contenus">
+            <li *ngIf="recurso.nbInfografias > 0">
+              <span>{{ recurso.nbInfografias }} infografía{{recurso.nbInfografias > 1 ? 's' : ''}}</span>
+            </li>
+            <li *ngIf="recurso.nbCahiersActivite > 0">
+              <span>{{ recurso.nbCahiersActivite }} cuaderno{{recurso.nbCahiersActivite > 1 ? 's' : ''}} de actividades</span>
+            </li>
+          </ul>
           <ul class="recurso-tags">
             <li class="tag" *ngFor="let tag of (recurso.tags ? recurso.tags.split(',') : [])">
               {{ tag.trim() }}

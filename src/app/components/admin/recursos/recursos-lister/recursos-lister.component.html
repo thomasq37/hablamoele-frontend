@@ -15,6 +15,14 @@
             {{ tag.trim() }}
           </li>
         </ul>
+        <ul class="recurso-nb-contenus">
+          <li>
+            <span>{{ recurso.nbInfografias ? recurso.nbInfografias : '0' }} infografía{{recurso.nbInfografias > 1 ? 's' : ''}}</span>
+          </li>
+          <li>
+            <span>{{ recurso.nbCahiersActivite ? recurso.nbCahiersActivite : '0'  }} cuaderno{{recurso.nbCahiersActivite > 1 ? 's' : ''}} de actividades</span>
+          </li>
+        </ul>
         <div class="actions-container">
           <button
             type="button"

@@ -87,8 +87,10 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
       titulo: ['', Validators.required],
       description: ['', Validators.required],
       tags: ['', Validators.required],
-      categoriasIds: [[]], // multi-select (IDs)
-      nivelesIds:   [[]],  // multi-select (IDs)
+      categoriasIds: [[]],
+      nivelesIds:   [[]],
+      nbInfografias: [0, Validators.required],
+      nbCahiersActivite: [0, Validators.required],
     });
   }
 
@@ -158,6 +160,8 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
           // Pré-sélectionner catégories / niveaux si fournis par l'API
           categoriasIds: Array.isArray(recurso.categorias) ? recurso.categorias.map((c: any) => c.id) : [],
           nivelesIds: Array.isArray(recurso.niveles) ? recurso.niveles.map((n: any) => n.id) : [],
+          nbInfografias: recurso.nbInfografias ?? 0,
+          nbCahiersActivite: recurso.nbCahiersActivite ?? 0,
         });
 
         // Banner existant
@@ -287,6 +291,7 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
 
     try {
       const payload = await this.preparePayload(this.recursosForm.value);
+      console.log(payload.nbInfografias)
       await this.recursosService.modifierRecursos(parseInt(this.recursosId, 10), payload as any);
       await this.router.navigate(['/admin-recursos-listar']);
     } catch (e: any) {
@@ -300,6 +305,8 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
       titulo: formValue.titulo,
       description: formValue.description,
       tags: formValue.tags,
+      nbInfografias: formValue.nbInfografias,
+      nbCahiersActivite: formValue.nbCahiersActivite
     };
 
     // Banner

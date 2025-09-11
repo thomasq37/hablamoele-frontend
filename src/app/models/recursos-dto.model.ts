@@ -10,4 +10,5 @@ export interface RecursosDTO {
   categorias?: Categoria[];
   niveles?: Nivel[];
   nbInfografias: number;
+  nbCahiersActivite: number;
 }

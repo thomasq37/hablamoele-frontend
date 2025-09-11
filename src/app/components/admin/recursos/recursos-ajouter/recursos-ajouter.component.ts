@@ -72,7 +72,9 @@ export class RecursosAjouterComponent implements OnInit {
       description: ['', Validators.required],
       tags: ['', Validators.required],
       categoriasIds: [[]], // multi-select => tableau d'IDs (string) que l'on convertira en number
-      nivelesIds: [[]],    // idem
+      nivelesIds: [[]],
+      nbInfografias: [0, Validators.required],
+      nbCahiersActivite: [0, Validators.required],// idem
     });
   }
 
@@ -260,8 +262,10 @@ export class RecursosAjouterComponent implements OnInit {
       tags: formValue.tags,
       banner: this.banner,
       infografias,
-      categorias,  // <-- [{id:1},{id:2},...]
-      niveles      // <-- [{id:3},{id:4},...]
+      categorias,
+      niveles,
+      nbInfografias: formValue.nbInfografias,
+      nbCahiersActivite: formValue.nbCahiersActivite
     };
   }
 
