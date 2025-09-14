@@ -67,8 +67,13 @@ export class NewsletterComponent implements OnInit, OnDestroy {
     const newsletterSubscriber : NewsletterSubscriber = {
       email : "none"
     }
-    this.newsletterSubscriberService.ajouterNewsletterSubscriber(newsletterSubscriber).then(() =>{
-      console.log("Cierre de popup registrada");
+    this.newsletterSubscriberService.ajouterNewsletterSubscriber(newsletterSubscriber).then((reponse) =>{
+      if(reponse !== false){
+        console.log("Cierre de popup registrada");
+      }
+      else {
+        console.log("Admin action. Cierre de popup no registrada");
+      }
     })
   }
 }
