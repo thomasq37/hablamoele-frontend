@@ -1,0 +1,53 @@
+.newsletter-liste {
+  padding: 1rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .loading {
+    color: #666;
+    font-style: italic;
+  }
+
+  .error {
+    color: #c62828;
+    font-weight: bold;
+  }
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+
+    th, td {
+      padding: 0.6rem 1rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    .email-container{
+      display: flex;
+      justify-content: space-between;
+      button{
+        background: red;
+        color: #fff;
+        border: 1px solid #e4e4e4;
+        padding: 0 .5rem;
+        border-radius: 5px;
+
+      }
+      a{
+        color: black !important;
+      }
+    }
+
+    th {
+      background-color: #f5f5f5;
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {authFetch} from "../auth/auth-fetch";
 import {NewsletterSubscriber} from "../../models/newsletter-subscriber.model";
+import {AuthGuard} from "../../guards/auth.guard";
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ import {NewsletterSubscriber} from "../../models/newsletter-subscriber.model";
 export class NewsletterSubscriberService {
   private apiUrl = `${environment.apiUrl}/newsletter-subscriber`;
 
-  constructor() {}
+  constructor(private authGuard: AuthGuard) {}
 
   async listerNewsletterSubscriber(): Promise<NewsletterSubscriber[]> {
-    const response = await fetch(`${this.apiUrl}`, { method: 'GET' });
+    const response = await authFetch(`${this.apiUrl}`, { method: 'GET' });
     if (!response.ok) throw new Error('Erreur lors du chargement des niveaux');
     return await response.json();
   }
@@ -23,7 +24,10 @@ export class NewsletterSubscriberService {
     return await response.json();
   }
 
-  async ajouterNewsletterSubscriber(newsletterSubscriber: NewsletterSubscriber): Promise<NewsletterSubscriber> {
+  async ajouterNewsletterSubscriber(newsletterSubscriber: NewsletterSubscriber): Promise<NewsletterSubscriber | boolean> {
+    if (this.authGuard.isLoggedIn()) {
+      return false;
+    }
     const response = await fetch(`${this.apiUrl}/ajouter`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

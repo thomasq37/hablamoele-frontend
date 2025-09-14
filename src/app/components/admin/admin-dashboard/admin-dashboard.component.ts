@@ -17,6 +17,8 @@ export class AdminDashboardComponent {
     { nom: 'Administrar categorias', url: '/admin-categorias-listar' },
     { nom: 'Administrar niveles', url: '/admin-niveles-listar' },
     { nom: 'Estadísticas', url: '/admin-estadisticas' },
+    { nom: 'Newsletter', url: '/admin-newsletter' },
+
 
   ];
 }

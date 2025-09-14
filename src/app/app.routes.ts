@@ -17,6 +17,7 @@ import {
   EstadisticasComponent
 } from "./components/admin/estadisticas/estadisticas-lista-descargar/estadisticas.component";
 import {RecursosComponent} from "./components/singlepage/recursos/recursos.component";
+import {NewsletterDashboardComponent} from "./components/admin/newsletter-dashboard/newsletter-dashboard.component";
 
 export const routes: Routes = [
   // public
@@ -40,6 +41,7 @@ export const routes: Routes = [
   { path: 'admin-categorias-modificar/:id', component: CategoriaModifierComponent, canActivate: [AuthGuard] },
   { path: 'admin-categorias-listar', component: CategoriaListerComponent, canActivate: [AuthGuard] },
   { path: 'admin-estadisticas', component: EstadisticasComponent, canActivate: [AuthGuard] },
+  { path: 'admin-newsletter', component: NewsletterDashboardComponent, canActivate: [AuthGuard] },
 
   { path: '**', component: InscriptionComponent},
 

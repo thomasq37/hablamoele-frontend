@@ -55,7 +55,7 @@ export class NewsletterComponent implements OnInit, OnDestroy {
       this.newsletterSubscriberService.ajouterNewsletterSubscriber(newsletterSubscriber).then(reponse =>{
         this.messageButtonSubmit = "Enviado!";
         setTimeout(() => {
-          this.fermerNewsletterPopup();
+          this.popupIsVisible = false;
         },1000)
       })
 
@@ -64,5 +64,11 @@ export class NewsletterComponent implements OnInit, OnDestroy {
 
   protected fermerNewsletterPopup() {
     this.popupIsVisible = false;
+    const newsletterSubscriber : NewsletterSubscriber = {
+      email : "none"
+    }
+    this.newsletterSubscriberService.ajouterNewsletterSubscriber(newsletterSubscriber).then(() =>{
+      console.log("Cierre de popup registrada");
+    })
   }
 }

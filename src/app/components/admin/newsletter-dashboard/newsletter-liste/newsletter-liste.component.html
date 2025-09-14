@@ -1,0 +1,28 @@
+<div class="newsletter-liste">
+  <h2>Lista de subscriptores a la newsletter</h2>
+
+  <div *ngIf="loading" class="loading">Cargando...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <p *ngIf="!loading">❌ Popups cerrada sin email : {{ closedCount }}</p>
+
+  <table *ngIf="!loading && subscribers.length > 0">
+    <thead>
+    <tr>
+      <th>Correo electrónico</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let sub of subscribers">
+      <td>
+        <div class="email-container">
+          <a [href]="'mailto:' + sub.email">{{ sub.email }}</a>
+          <button (click)="supprimerAbonne(sub.id)">Borrar</button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && subscribers.length === 0">Ningun subscriptor por el momento.</p>
+</div>
