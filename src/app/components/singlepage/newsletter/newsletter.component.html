@@ -1,0 +1,28 @@
+<div class="newsletter-content" *ngIf="popupIsVisible">
+  <button (click)="fermerNewsletterPopup()" class="newsletter-close-btn">X</button>
+  <div class="newsletter-border">
+    <h2 class="newsletter-title">¡Suscríbete y consigue 2 horas gratis + recursos exclusivos!</h2>
+    <p class="newsletter-text">
+      Déjanos tu correo y te enviaremos clases, plantillas y novedades directamente a tu bandeja de entrada.
+    </p>
+
+    <form [formGroup]="newsletterForm" (ngSubmit)="enregistrerEmail()" class="newsletter-form" action="#" method="post" novalidate>
+      <label for="newsletter-email" class="visually-hidden">Correo electrónico</label>
+      <div class="newsletter-inputs">
+        <input
+          id="newsletter-email"
+          formControlName="email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          required
+          placeholder="Tu correo electrónico"
+          class="newsletter-email"
+          aria-describedby="newsletter-help"
+        />
+        <button [className]="newsletterForm.valid ? 'newsletter-submit' : 'newsletter-submit disabled'" type="submit">{{messageButtonSubmit}}</button>
+      </div>
+    </form>
+  </div>
+</div>

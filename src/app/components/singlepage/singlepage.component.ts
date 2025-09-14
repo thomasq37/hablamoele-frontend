@@ -8,6 +8,7 @@ import {RecursosComponent} from "./recursos/recursos.component";
 import {ContactComponent} from "./contact/contact.component";
 import {FooterComponent} from "./footer/footer.component";
 import {RecursosPreviewComponent} from "./recursos-preview/recursos-preview.component";
+import {NewsletterComponent} from "./newsletter/newsletter.component";
 
 @Component({
   selector: 'app-singlepage',
@@ -21,7 +22,8 @@ import {RecursosPreviewComponent} from "./recursos-preview/recursos-preview.comp
     RecursosComponent,
     ContactComponent,
     FooterComponent,
-    RecursosPreviewComponent
+    RecursosPreviewComponent,
+    NewsletterComponent
   ],
   templateUrl: './singlepage.component.html',
   styleUrl: './singlepage.component.scss'
