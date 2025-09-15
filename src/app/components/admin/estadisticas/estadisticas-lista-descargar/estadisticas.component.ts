@@ -73,16 +73,28 @@ export class EstadisticasComponent implements OnInit {
         recursosId,
         recursosTitulo: visualisations[0].recursosTitulo, // Même titre pour toutes
         totalVisualisations: visualisations.length,
-        derniereVisualisacion: new Date(visualisationsTriees[0].dateVisualisacion),
-        visualisations: visualisationsTriees
+        derniereVisualisacion: this.addHours(new Date(visualisationsTriees[0].dateVisualisacion), +2),
+        visualisations: visualisationsTriees.map(v => ({
+          ...v,
+          dateVisualisacion: this.addHours(new Date(v.dateVisualisacion), +2).toISOString() // 👈 retourne un string
+        }))
       };
     });
+
 
     // Trier les groupes par dernière visualisation (plus récents en premier)
     this.recursosGroupes.sort((a, b) =>
       b.derniereVisualisacion.getTime() - a.derniereVisualisacion.getTime()
     );
   }
+
+  // TODO corriger backend et db
+  private addHours(date: Date, hours: number): Date {
+    const d = new Date(date);
+    d.setHours(d.getHours() + hours);
+    return d;
+  }
+
 
   private calculerTotalVisualisations(): void {
     this.totalVisualisations = this.recursosVisualisacionDTO.length;
