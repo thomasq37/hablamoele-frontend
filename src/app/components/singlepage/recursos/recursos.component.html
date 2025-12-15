@@ -1,20 +1,7 @@
-<!--
-<app-menu [menuItems]="menuItems" [menuAdmin]="false"></app-menu>
--->
-<div class="loader-container" *ngIf="isLoading">
-  <div class="container">
-<!--
-    <h2>Recursos para profesores</h2>
--->
-    <span class="loader"></span>
-  </div>
-</div>
-
-<!-- Contenu principal une fois chargé -->
-<section id="recursos" *ngIf="!isLoading && recursos.length > 0">
+<section id="recursos">
   <div class="container">
     <div class="cta-classes">
-      <a (click)="scrollToReservation($event)">¿Quieres una classe conmigo?</a>
+      <a (click)="scrollToReservation($event)">¿Quieres una clase conmigo?</a>
     </div>
 
     <div class="filters">
@@ -137,7 +124,7 @@
     <!-- Aucun résultat -->
     <ng-template #noResults>
       <p class="recursos-empty">
-        No hay recursos que coincidan con los filtros seleccionados.
+        Los recursos estan cargando...
       </p>
     </ng-template>
   </div>
