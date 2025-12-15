@@ -38,7 +38,9 @@ h2 {
 // Containers
 #recursos {
   font-family: Poppins, serif;
+  /*
   padding-bottom: 11rem;
+  */
 
 }
 
@@ -266,5 +268,23 @@ h2 {
   .recursos-liste {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+.cta-classes {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4rem;
+  a {
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    font-size: 1.6rem;
+    background: black;
+    color: white !important;
+    cursor: pointer;
+    &:hover, &:focus{
+      transform: scale(1.05);
+    }
   }
 }

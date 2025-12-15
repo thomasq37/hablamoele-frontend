@@ -1,4 +1,6 @@
+<!--
 <app-menu [menuItems]="menuItems" [menuAdmin]="false"></app-menu>
+-->
 <div class="loader-container" *ngIf="isLoading">
   <div class="container">
 <!--
@@ -11,9 +13,9 @@
 <!-- Contenu principal une fois chargé -->
 <section id="recursos" *ngIf="!isLoading && recursos.length > 0">
   <div class="container">
-<!--
-    <h2>Recursos para profesores</h2>
--->
+    <div class="cta-classes">
+      <a (click)="scrollToReservation($event)">¿Quieres una classe conmigo?</a>
+    </div>
 
     <div class="filters">
       <!-- Groupe Niveles -->
@@ -139,5 +141,6 @@
       </p>
     </ng-template>
   </div>
+
 </section>
 <app-footer></app-footer>

@@ -203,4 +203,12 @@ export class RecursosComponent implements OnInit {
   naviuerARecursos() {
     this.router.navigate(['/recursos']);
   }
+
+  scrollToReservation(event: Event) {
+    event.preventDefault(); // empêche le comportement par défaut
+    const el = document.getElementById('reservations');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 }
