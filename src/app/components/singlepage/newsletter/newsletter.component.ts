@@ -30,16 +30,19 @@ export class NewsletterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const alreadyShown = localStorage.getItem('newsletterPopupShown');
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const alreadyShown = localStorage.getItem('newsletterPopupShown');
 
-    if (!alreadyShown) {
-      this.timerSub = timer(3000).subscribe(() => {
-        this.popupIsVisible = true;
-        if(localStorage){
-          //localStorage.setItem('newsletterPopupShown', 'true');
-        }
-      });
+      if (!alreadyShown) {
+        this.timerSub = timer(3000).subscribe(() => {
+          this.popupIsVisible = true;
+          if(localStorage){
+            //localStorage.setItem('newsletterPopupShown', 'true');
+          }
+        });
+      }
     }
+
   }
 
   ngOnDestroy(): void {

@@ -28,6 +28,7 @@
     "@angular/platform-server": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@angular/ssr": "^17.0.3",
+    "@aws-sdk/client-s3": "^3.955.0",
     "@fullcalendar/angular": "^6.1.19",
     "@fullcalendar/daygrid": "^6.1.19",
     "@fullcalendar/google-calendar": "^6.1.19",

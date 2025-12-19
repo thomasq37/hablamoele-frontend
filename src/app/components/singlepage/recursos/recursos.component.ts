@@ -73,15 +73,15 @@ export class RecursosComponent implements OnInit {
       // Marquer comme en cours de téléchargement
       this.downloadingRecursos.add(recurso.id);
 
-      // Obtenir les infographies
-      const infografias = await this.recursosService.obtenirInfografiasIdRecursos(recurso.id);
+      // Obtenir les URLs des infographies depuis S3
+      const infografiaUrls = await this.recursosService.obtenirInfografiasIdRecursos(recurso.id);
 
       // Initialiser la progression
-      this.downloadProgress.set(recurso.id, { current: 0, total: infografias.length });
+      this.downloadProgress.set(recurso.id, { current: 0, total: infografiaUrls.length });
 
       // Télécharger chaque infographie
-      for (let index = 0; index < infografias.length; index++) {
-        const base64 = infografias[index];
+      for (let index = 0; index < infografiaUrls.length; index++) {
+        const url = infografiaUrls[index];
         const nom = this.buildPdfName(
           recurso.titulo || 'recurso',
           `infografia-${index + 1}`
@@ -89,16 +89,16 @@ export class RecursosComponent implements OnInit {
 
         // Attendre un délai entre les téléchargements
         if (index > 0) {
-          await this.delay(200);
+          await this.delay(300); // Augmenté à 300ms pour éviter de surcharger S3
         }
 
-        // Télécharger
-        await this.downloader.downloadBase64Pdf(base64, nom);
+        // Télécharger depuis l'URL S3
+        await this.downloader.downloadPdfFromUrl(url, nom);
 
         // Mettre à jour la progression
         this.downloadProgress.set(recurso.id, {
           current: index + 1,
-          total: infografias.length
+          total: infografiaUrls.length
         });
       }
 
@@ -117,6 +117,7 @@ export class RecursosComponent implements OnInit {
       this.downloadProgress.delete(recurso.id);
     }
   }
+
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
