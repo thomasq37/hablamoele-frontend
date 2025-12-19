@@ -8,10 +8,11 @@ import { ActionBtnComponent } from '../../../action-btn/action-btn.component';
 
 import { RecursosService } from '../../../../services/recursos/recursos.service';
 import { NivelService } from '../../../../services/nivel/nivel.service';
+import { CategoriaService } from '../../../../services/categoria/categoria.service';
+import { S3Service } from '../../../../services/S3/s3.service';
 
 import { Categoria } from '../../../../models/categoria.model';
 import { Nivel } from '../../../../models/nivel.model';
-import {CategoriaService} from "../../../../services/categoria/categoria.service";
 
 @Component({
   selector: 'app-recursos-modifier',
@@ -33,29 +34,28 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
   recursosId: string = '';
   loading = true;
 
-  // Refs inputs fichiers
+  // Titre original pour suppression des anciens fichiers
+  private originalTitulo: string = '';
+
   @ViewChild('bannerInput') bannerInput!: ElementRef<HTMLInputElement>;
   @ViewChild('infografiasInput') infografiasInput!: ElementRef<HTMLInputElement>;
 
   // État local - données actuelles
-  currentBanner: string = '';
   currentBannerUrl: string = '';
 
-  // Infografías - liste unifiée (existantes + nouvelles)
+  // Infografías - liste unifiée
   infografias: Array<{
     id?: string;
     name: string;
-    base64?: string;
+    url?: string;
     file?: File;
     isNew: boolean;
     isDeleted?: boolean;
   }> = [];
 
-  // État local - nouvelles données
-  newBanner: string = '';
+  // Nouvelles données
+  newBannerFile: File | null = null;
   newBannerFileName: string = '';
-
-  // Indicateurs de modification
   bannerModified = false;
 
   // Référentiels
@@ -80,6 +80,7 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
     private recursosService: RecursosService,
     private categoriaService: CategoriaService,
     private nivelService: NivelService,
+    private s3Service: S3Service,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -88,33 +89,39 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
       description: ['', Validators.required],
       tags: ['', Validators.required],
       categoriasIds: [[]],
-      nivelesIds:   [[]],
+      nivelesIds: [[]],
       nbInfografias: [0, Validators.required],
       nbCahiersActivite: [0, Validators.required],
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.recursosId = this.route.snapshot.paramMap.get('id') || '';
-    // Charger référentiels d'abord (pour que la vue voie les options)
-    this.chargerCategorias();
-    this.chargerNiveles();
-    // Puis charger le recurso
-    if (this.recursosId) {
-      this.chargerRecursos();
-    } else {
+
+    if (!this.recursosId) {
       this.errorMessage = 'ID del recurso no válido.';
+      this.loading = false;
+      return;
+    }
+
+    try {
+      await this.s3Service.initialize();
+      await Promise.all([
+        this.chargerCategorias(),
+        this.chargerNiveles()
+      ]);
+      await this.chargerRecursos();
+
+    } catch (error: any) {
+      console.error('❌ Erreur initialisation:', error);
+      this.errorMessage = error?.message || 'Error al cargar la configuración.';
       this.loading = false;
     }
   }
-
   ngOnDestroy(): void {
     this.destroyed = true;
   }
 
-  /* ======================
-   *  Chargement référentiels
-   * ====================== */
   private async chargerCategorias(): Promise<void> {
     this.categoriasLoading = true;
     this.categoriasError = '';
@@ -144,20 +151,18 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
   trackByCatId = (_: number, c: Categoria) => c.id;
   trackByNivelId = (_: number, n: Nivel) => n.id;
 
-  /* ======================
-   *  Charger le recurso existant
-   * ====================== */
   async chargerRecursos(): Promise<void> {
     try {
       const recurso: any = await this.recursosService.obtenirParIdRecursos(parseInt(this.recursosId, 10));
 
       if (recurso) {
-        // Remplir le formulaire
+        // SAUVEGARDER LE TITRE ORIGINAL
+        this.originalTitulo = recurso.titulo || '';
+
         this.recursosForm.patchValue({
           titulo: recurso.titulo || '',
           description: recurso.description || '',
           tags: recurso.tags || '',
-          // Pré-sélectionner catégories / niveaux si fournis par l'API
           categoriasIds: Array.isArray(recurso.categorias) ? recurso.categorias.map((c: any) => c.id) : [],
           nivelesIds: Array.isArray(recurso.niveles) ? recurso.niveles.map((n: any) => n.id) : [],
           nbInfografias: recurso.nbInfografias ?? 0,
@@ -165,15 +170,14 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
         });
 
         // Banner existant
-        this.currentBanner = recurso.banner || '';
-        this.currentBannerUrl = this.currentBanner ? `data:image/png;base64,${this.currentBanner}` : '';
+        this.currentBannerUrl = recurso.banner || '';
 
-        // Infografías existantes -> format unifié
+        // Infografías existantes
         if (Array.isArray(recurso.infografias) && recurso.infografias.length > 0) {
-          this.infografias = recurso.infografias.map((infografia: string, index: number) => ({
+          this.infografias = recurso.infografias.map((url: string, index: number) => ({
             id: `existing_${index}`,
             name: `Infografía ${index + 1}.pdf`,
-            base64: infografia,
+            url: url,
             isNew: false,
             isDeleted: false
           }));
@@ -190,9 +194,6 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* ======================
-   *  Banner
-   * ====================== */
   async onBannerChange(event: Event): Promise<void> {
     if (this.destroyed || !this.isBrowser) return;
 
@@ -206,28 +207,19 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
       return;
     }
 
-    try {
-      const dataUrl = await this.fileToBase64(selected);
-      const clean = dataUrl.replace(/^data:[^;]+;base64,/, '');
-      this.newBanner = clean;
-      this.newBannerFileName = selected.name;
-      this.bannerModified = true;
-      this.errorMessage = '';
-    } catch {
-      if (!this.destroyed) this.errorMessage = 'Error al leer el archivo PNG.';
-    }
+    this.newBannerFile = selected;
+    this.newBannerFileName = selected.name;
+    this.bannerModified = true;
+    this.errorMessage = '';
   }
 
   supprimerNouveauBanner(): void {
-    this.newBanner = '';
+    this.newBannerFile = null;
     this.newBannerFileName = '';
     this.bannerModified = false;
     if (this.bannerInput?.nativeElement) this.bannerInput.nativeElement.value = '';
   }
 
-  /* ======================
-   *  Infografías (PDF)
-   * ====================== */
   async onInfografiasChange(event: Event): Promise<void> {
     if (this.destroyed || !this.isBrowser) return;
 
@@ -242,20 +234,16 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
       return;
     }
 
-    try {
-      for (const file of pdfFiles) {
-        this.infografias.push({
-          name: file.name,
-          file,
-          isNew: true,
-          isDeleted: false
-        });
-      }
-      this.errorMessage = '';
-      input.value = '';
-    } catch {
-      if (!this.destroyed) this.errorMessage = 'Error al procesar los archivos PDF.';
+    for (const file of pdfFiles) {
+      this.infografias.push({
+        name: file.name,
+        file,
+        isNew: true,
+        isDeleted: false
+      });
     }
+    this.errorMessage = '';
+    input.value = '';
   }
 
   supprimerInfografia(index: number): void {
@@ -280,9 +268,6 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
     return this.infografias.filter(inf => inf.isDeleted && !inf.isNew);
   }
 
-  /* ======================
-   *  Submit
-   * ====================== */
   async modifierRecursos(): Promise<void> {
     if (this.destroyed || this.recursosForm.invalid) {
       this.errorMessage = 'Por favor completa todos los campos obligatorios.';
@@ -291,7 +276,6 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
 
     try {
       const payload = await this.preparePayload(this.recursosForm.value);
-      console.log(payload.nbInfografias)
       await this.recursosService.modifierRecursos(parseInt(this.recursosId, 10), payload as any);
       await this.router.navigate(['/admin-recursos-listar']);
     } catch (e: any) {
@@ -299,53 +283,71 @@ export class RecursosModifierComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* Construire payload final pour le back */
   private async preparePayload(formValue: any) {
+    const newTitulo = formValue.titulo;
+
     const payload: any = {
-      titulo: formValue.titulo,
+      titulo: newTitulo,
       description: formValue.description,
       tags: formValue.tags,
       nbInfografias: formValue.nbInfografias,
       nbCahiersActivite: formValue.nbCahiersActivite
     };
 
-    // Banner
-    payload.banner = (this.bannerModified && this.newBanner) ? this.newBanner : this.currentBanner;
+    // Banner - supprimer l'ancien si modifié
+    if (this.bannerModified && this.newBannerFile) {
+      // Supprimer l'ancien banner
+      if (this.currentBannerUrl) {
+        try {
+          await this.s3Service.deleteFileByUrl(this.currentBannerUrl);
+        } catch (error) {
+          console.warn('Impossible de supprimer l\'ancien banner:', error);
+        }
+      }
 
-    // Infografías
-    const infografias: string[] = [];
+      // ✅ uploadFile() retourne déjà l'URL complète pour les banners
+      const bannerUrl = await this.s3Service.uploadFile(this.newBannerFile, 'banners', newTitulo);
+      payload.banner = bannerUrl; // ✅ URL complète directement
+    } else {
+      payload.banner = this.currentBannerUrl;
+    }
+
+    // Infografías - supprimer les anciennes marquées comme supprimées
+    const urlsToDelete = this.infografias
+      .filter(inf => inf.isDeleted && !inf.isNew && inf.url)
+      .map(inf => inf.url!);
+
+    if (urlsToDelete.length > 0) {
+      try {
+        await this.s3Service.deleteMultipleFiles(urlsToDelete);
+      } catch (error) {
+        console.warn('Impossible de supprimer certaines infografías:', error);
+      }
+    }
+
+    // Uploader les nouvelles infografías
+    const infografiasUrls: string[] = [];
     for (const inf of this.infografias) {
       if (!inf.isDeleted) {
         if (inf.isNew && inf.file) {
-          const dataUrl = await this.fileToBase64(inf.file);
-          const clean = dataUrl.replace(/^data:[^;]+;base64,/, '');
-          infografias.push(clean);
-        } else if (!inf.isNew && inf.base64) {
-          infografias.push(inf.base64);
+          // ✅ uploadFile() retourne la CLÉ S3 pour les infografías
+          const key = await this.s3Service.uploadFile(inf.file, 'infografias', newTitulo);
+          infografiasUrls.push(key); // ✅ Clé S3 directement
+        } else if (!inf.isNew && inf.url) {
+          infografiasUrls.push(inf.url);
         }
       }
     }
-    payload.infografias = infografias;
+    payload.infografias = infografiasUrls;
 
-    // Categorías / Niveles (IDs du select multiple -> number[])
+    // Categorías / Niveles
     const categoriasIds: number[] = (formValue.categoriasIds || []).map((v: string | number) => +v);
     const nivelesIds: number[] = (formValue.nivelesIds || []).map((v: string | number) => +v);
 
-    // Mapper vers objets {id} (pratique pour ManyToMany JPA)
     payload.categorias = categoriasIds.map(id => ({ id }));
-    payload.niveles   = nivelesIds.map(id => ({ id }));
+    payload.niveles = nivelesIds.map(id => ({ id }));
 
     return payload;
-  }
-
-  /* Utils */
-  private fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(reader.error);
-      reader.onload = () => resolve(String(reader.result));
-      reader.readAsDataURL(file);
-    });
   }
 
   retournerALaListe(): void {

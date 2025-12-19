@@ -78,10 +78,22 @@ export class RecursosAjouterComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.chargerCategorias();
-    this.chargerNiveles();
+  async ngOnInit(): Promise<void> {
+    try {
+      await this.s3Service.initialize();
+      await Promise.all([
+        this.chargerCategorias(),
+        this.chargerNiveles()
+      ]);
+
+      console.log('✅ Composant prêt');
+
+    } catch (error: any) {
+      console.error('❌ Erreur initialisation:', error);
+      this.errorMessage = error?.message || 'Error al cargar la configuración.';
+    }
   }
+
 
   ngOnDestroy(): void {
     this.destroyed = true;

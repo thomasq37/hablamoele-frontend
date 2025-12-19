@@ -148,6 +148,15 @@ export function app(): express.Express {
     }
   });
 
+  server.get('/config/s3', (req, res) => {
+    res.json({
+      AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'],
+      AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'],
+      AWS_REGION: process.env['AWS_REGION'],
+      S3_BUCKET_NAME: process.env['S3_BUCKET_NAME']
+    });
+  });
+
   server.post('/create-checkout-session', async (req: Request, res: Response) => {
     const { items, formData, eventsMetadata } = req.body;
     const session = await stripe.checkout.sessions.create({
@@ -372,3 +381,5 @@ async function sendConfirmationEmail(
     console.error('Error al enviar el correo:', error);
   }
 }
+
+
