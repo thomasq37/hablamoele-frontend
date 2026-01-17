@@ -62,40 +62,57 @@ export class RecursosComponent implements OnInit {
         this.isLoading = false;
       });
   }
+
   async onDescargar(recurso: RecursosDTO): Promise<void> {
-    if (!recurso.id || this.downloadingRecursos.has(recurso.id)) return;
+    // Empêcher le téléchargement si déjà en cours
+    if (!recurso.id || this.downloadingRecursos.has(recurso.id)) {
+      return;
+    }
 
     try {
+      // Marquer comme en cours de téléchargement
       this.downloadingRecursos.add(recurso.id);
 
-      const infografiaUrls =
-        await this.recursosService.obtenirInfografiasIdRecursos(recurso.id);
+      // Obtenir les URLs des infographies depuis S3
+      const infografiaUrls = await this.recursosService.obtenirInfografiasIdRecursos(recurso.id);
 
-      this.downloadProgress.set(recurso.id, {
-        current: 0,
-        total: infografiaUrls.length
-      });
+      // Initialiser la progression
+      this.downloadProgress.set(recurso.id, { current: 0, total: infografiaUrls.length });
 
-      for (let i = 0; i < infografiaUrls.length; i++) {
-        const url = infografiaUrls[i];
+      // Télécharger chaque infographie
+      for (let index = 0; index < infografiaUrls.length; index++) {
+        const url = "https://hablamosele.s3.eu-north-1.amazonaws.com/" + infografiaUrls[index];
+        const nom = this.buildPdfName(
+          recurso.titulo || 'recurso',
+          `infografia-${index + 1}`
+        );
 
-        // 🔹 ouverture dans un nouvel onglet
-        this.downloader.download(url);
-        console.log(infografiaUrls[i]);
+        // Attendre un délai entre les téléchargements
+        if (index > 0) {
+          await this.delay(300); // Augmenté à 300ms pour éviter de surcharger S3
+        }
+
+        // Télécharger depuis l'URL S3
+        await this.downloader.downloadPdfFromUrl(url, nom);
+
+        // Mettre à jour la progression
         this.downloadProgress.set(recurso.id, {
-          current: i + 1,
+          current: index + 1,
           total: infografiaUrls.length
         });
-
-        // Petite pause pour que le navigateur n'interdise pas les popups
-        await this.delay(300);
       }
 
-      await this.recursosService.ajouterVisualisacion(recurso.id);
+      const visualisationAjoutee = await this.recursosService.ajouterVisualisacion(recurso.id);
+      if (visualisationAjoutee) {
+        console.log("Visualisation ajoutée avec succès");
+      } else {
+        console.log("Visualisation non ajoutée (utilisateur connecté ou erreur)");
+      }
 
-    } catch (err) {
-      console.error('Erreur téléchargement :', err);
+    } catch (error) {
+      console.error('Erreur lors du téléchargement:', error);
     } finally {
+      // Nettoyer l'état de téléchargement
       this.downloadingRecursos.delete(recurso.id);
       this.downloadProgress.delete(recurso.id);
     }
@@ -104,6 +121,12 @@ export class RecursosComponent implements OnInit {
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private buildPdfName(recursoTitle: string, infografiaTitle: string): string {
+    const sanitize = (s: string) =>
+      s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '_').replace(/^_+|_+$/g, '');
+    return `${sanitize(recursoTitle)}__${sanitize(infografiaTitle)}.pdf`;
   }
 
   // Méthodes pour vérifier l'état de téléchargement
