@@ -63,9 +63,7 @@ export class RecursosComponent implements OnInit {
       });
   }
   async onDescargar(recurso: RecursosDTO): Promise<void> {
-    if (!recurso.id || this.downloadingRecursos.has(recurso.id)) {
-      return;
-    }
+    if (!recurso.id || this.downloadingRecursos.has(recurso.id)) return;
 
     try {
       this.downloadingRecursos.add(recurso.id);
@@ -80,21 +78,17 @@ export class RecursosComponent implements OnInit {
 
       for (let i = 0; i < infografiaUrls.length; i++) {
         const url = infografiaUrls[i];
-        const nombre = this.buildPdfName(
-          recurso.titulo || 'recurso',
-          `infografia-${i + 1}`
-        );
 
-        // 👉 téléchargement direct (sans fetch)
-        this.downloader.download(url, nombre);
+        // 🔹 ouverture dans un nouvel onglet
+        this.downloader.download(url);
 
         this.downloadProgress.set(recurso.id, {
           current: i + 1,
           total: infografiaUrls.length
         });
 
-        // Petite pause pour éviter que le navigateur bloque
-        await this.delay(250);
+        // Petite pause pour que le navigateur n'interdise pas les popups
+        await this.delay(300);
       }
 
       await this.recursosService.ajouterVisualisacion(recurso.id);
@@ -106,6 +100,7 @@ export class RecursosComponent implements OnInit {
       this.downloadProgress.delete(recurso.id);
     }
   }
+
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
