@@ -62,62 +62,50 @@ export class RecursosComponent implements OnInit {
         this.isLoading = false;
       });
   }
-
   async onDescargar(recurso: RecursosDTO): Promise<void> {
-    // Empêcher le téléchargement si déjà en cours
     if (!recurso.id || this.downloadingRecursos.has(recurso.id)) {
       return;
     }
 
     try {
-      // Marquer comme en cours de téléchargement
       this.downloadingRecursos.add(recurso.id);
 
-      // Obtenir les URLs des infographies depuis S3
-      const infografiaUrls = await this.recursosService.obtenirInfografiasIdRecursos(recurso.id);
+      const infografiaUrls =
+        await this.recursosService.obtenirInfografiasIdRecursos(recurso.id);
 
-      // Initialiser la progression
-      this.downloadProgress.set(recurso.id, { current: 0, total: infografiaUrls.length });
+      this.downloadProgress.set(recurso.id, {
+        current: 0,
+        total: infografiaUrls.length
+      });
 
-      // Télécharger chaque infographie
-      for (let index = 0; index < infografiaUrls.length; index++) {
-        const url = infografiaUrls[index];
-        const nom = this.buildPdfName(
+      for (let i = 0; i < infografiaUrls.length; i++) {
+        const url = infografiaUrls[i];
+        const nombre = this.buildPdfName(
           recurso.titulo || 'recurso',
-          `infografia-${index + 1}`
+          `infografia-${i + 1}`
         );
 
-        // Attendre un délai entre les téléchargements
-        if (index > 0) {
-          await this.delay(300); // Augmenté à 300ms pour éviter de surcharger S3
-        }
+        // 👉 téléchargement direct (sans fetch)
+        this.downloader.download(url, nombre);
 
-        // Télécharger depuis l'URL S3
-        await this.downloader.downloadPdfFromUrl(url, nom);
-
-        // Mettre à jour la progression
         this.downloadProgress.set(recurso.id, {
-          current: index + 1,
+          current: i + 1,
           total: infografiaUrls.length
         });
+
+        // Petite pause pour éviter que le navigateur bloque
+        await this.delay(250);
       }
 
-      const visualisationAjoutee = await this.recursosService.ajouterVisualisacion(recurso.id);
-      if (visualisationAjoutee) {
-        console.log("Visualisation ajoutée avec succès");
-      } else {
-        console.log("Visualisation non ajoutée (utilisateur connecté ou erreur)");
-      }
+      await this.recursosService.ajouterVisualisacion(recurso.id);
 
-    } catch (error) {
-      console.error('Erreur lors du téléchargement:', error);
+    } catch (err) {
+      console.error('Erreur téléchargement :', err);
     } finally {
-      // Nettoyer l'état de téléchargement
       this.downloadingRecursos.delete(recurso.id);
       this.downloadProgress.delete(recurso.id);
     }
   }
-
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
