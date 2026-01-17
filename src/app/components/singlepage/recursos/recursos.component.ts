@@ -81,7 +81,7 @@ export class RecursosComponent implements OnInit {
 
         // 🔹 ouverture dans un nouvel onglet
         this.downloader.download(url);
-
+        console.log(infografiaUrls[i]);
         this.downloadProgress.set(recurso.id, {
           current: i + 1,
           total: infografiaUrls.length
@@ -104,12 +104,6 @@ export class RecursosComponent implements OnInit {
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  private buildPdfName(recursoTitle: string, infografiaTitle: string): string {
-    const sanitize = (s: string) =>
-      s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '_').replace(/^_+|_+$/g, '');
-    return `${sanitize(recursoTitle)}__${sanitize(infografiaTitle)}.pdf`;
   }
 
   // Méthodes pour vérifier l'état de téléchargement
