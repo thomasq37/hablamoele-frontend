@@ -7,7 +7,6 @@ import {ReservationsComponent} from "./reservations/reservations.component";
 import {RecursosComponent} from "./recursos/recursos.component";
 import {ContactComponent} from "./contact/contact.component";
 import {FooterComponent} from "./footer/footer.component";
-import {RecursosPreviewComponent} from "./recursos-preview/recursos-preview.component";
 import {NewsletterComponent} from "./newsletter/newsletter.component";
 
 @Component({
@@ -22,7 +21,6 @@ import {NewsletterComponent} from "./newsletter/newsletter.component";
     RecursosComponent,
     ContactComponent,
     FooterComponent,
-    RecursosPreviewComponent,
     NewsletterComponent
   ],
   templateUrl: './singlepage.component.html',
